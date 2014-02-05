@@ -14,12 +14,15 @@ public class MainGUI extends JFrame {
 	private static final long serialVersionUID = 5009798814042290230L;
 	
 	// Panels
-	private JPanel mainFrame;
+	private JPanel mainPanel;
 	
 	// Menus
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private JMenuItem menuItem;
+	
+	// Applets 
+	private static MineApplet mineApplet;
 	/**
 	 * Default constructor for the GUI
 	 */
@@ -33,14 +36,20 @@ public class MainGUI extends JFrame {
 	public void initGUI() {
 		setLayout(new BorderLayout(3, 3));
 		
-		mainFrame = new JPanel();
-		mainFrame.setPreferredSize(new Dimension(500, 500));		
+		mainPanel = new JPanel();	
 		
-		add(mainFrame, BorderLayout.CENTER);
+		// Set up board and applet
+		Board board = new Board();
+		mineApplet = new MineApplet(board, 25);
+		mainPanel.add(mineApplet);
+		
+		add(mainPanel, BorderLayout.CENTER);
 		
 		setTitle("Competitive Minesweeper");
 		pack();
 		setVisible(true);		
+		
+		mineApplet.initGraphics();
 	}
 	
 	/**
