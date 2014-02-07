@@ -73,24 +73,22 @@ public class MineApplet extends Applet implements MouseListener {
 	 * method
 	 */
 	public void updateImage() {
-<<<<<<< HEAD
-		//System.out.println("updateImage");
-=======
->>>>>>> 62afe9b1590f70b152b6908aa670748bf8dc39d4
 		// Paint the spaces
 		for(int i = 0; i < board.getHeight(); i++) {
 			for(int j = 0; j < board.getWidth(); j++) {
 				if(board.isHidden(j, i)) {
 					bufferGraphics.setColor(Color.BLUE);
+					bufferGraphics.fillRect(j * scale, i * scale, scale, scale);
 				} else if (board.getSpace(j, i) == -1){
 					bufferGraphics.setColor(Color.RED);
+					bufferGraphics.fillRect(j * scale, i * scale, scale, scale);
 				} else {
+					bufferGraphics.setColor(Color.GRAY);
+					bufferGraphics.fillRect(j * scale, i * scale, scale, scale);
 					bufferGraphics.setColor(Color.YELLOW);
 					//how the fuck do I position these
-					bufferGraphics.drawChars((""+board.getSpace(j, i)).toCharArray(), 0, 1, j*scale, i*scale);
-					bufferGraphics.setColor(Color.GRAY);
+					bufferGraphics.drawString(board.getSpace(j, i) + "", (int)(j * scale + scale / 2.5), (int)(i * scale + scale / 1.5));
 				}
-				bufferGraphics.fillRect(j * scale, i * scale, scale, scale);
 			}
 		}
 		
