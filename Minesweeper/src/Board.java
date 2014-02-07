@@ -17,8 +17,8 @@ public class Board {
 	 */
 	public Board() {
 		// TODO Make adjustments for different sizes
-		width = 10;
-		height = 10;
+		width = 9;
+		height = 9;
 		spaces = new int[height][width];
 		hidden = new boolean[height][width];
 		for (int i = 0; i < hidden.length; i++) {
@@ -33,6 +33,7 @@ public class Board {
 	 * @param x The X coordinate of the clicked space
 	 * @param y The Y coordinate of the clicked space
 	 */
+<<<<<<< HEAD
 	public void leftClick(int x, int y) {
 		//System.out.println("Clicked: (" + x + ", " + y + ")");
 		hidden[y][x] = false;
@@ -46,6 +47,9 @@ public class Board {
 	
 	public void rightClick(int x, int y) {
 		//add a flag to this space
+=======
+	public void click(int x, int y) {
+>>>>>>> 62afe9b1590f70b152b6908aa670748bf8dc39d4
 	}
 
 	/**
