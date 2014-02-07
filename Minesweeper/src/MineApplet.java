@@ -37,6 +37,8 @@ public class MineApplet extends Applet implements MouseListener {
 	 */
 	public void newBoard(Board board) {
 		this.board = board;
+		this.board.setupBoardRandom(15); //TEMPORARY
+		//this.board.unhideAll(); //TEMPORARY
 	}
 
 	/**
@@ -73,13 +75,18 @@ public class MineApplet extends Applet implements MouseListener {
 	 * method
 	 */
 	public void updateImage() {
-		System.out.println("updateImage");
+		//System.out.println("updateImage");
 		// Paint the spaces
 		for(int i = 0; i < board.getHeight(); i++) {
 			for(int j = 0; j < board.getWidth(); j++) {
 				if(board.isHidden(j, i)) {
 					bufferGraphics.setColor(Color.BLUE);
+				} else if (board.getSpace(j, i) == -1){
+					bufferGraphics.setColor(Color.RED);
 				} else {
+					bufferGraphics.setColor(Color.YELLOW);
+					//how the fuck do I position these
+					bufferGraphics.drawChars((""+board.getSpace(j, i)).toCharArray(), 0, 1, j*scale, i*scale);
 					bufferGraphics.setColor(Color.GRAY);
 				}
 				bufferGraphics.fillRect(j * scale, i * scale, scale, scale);
@@ -121,7 +128,7 @@ public class MineApplet extends Applet implements MouseListener {
 		if(arg0.getButton() == MouseEvent.BUTTON1) {
 			// Left Click.  Reveal space
 			if(board.isHidden(x, y)) {
-				board.click(x, y);
+				board.leftClick(x, y);
 				updateImage();
 				repaint();
 			}
