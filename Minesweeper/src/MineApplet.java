@@ -86,7 +86,6 @@ public class MineApplet extends Applet implements MouseListener {
 					bufferGraphics.setColor(Color.GRAY);
 					bufferGraphics.fillRect(j * scale, i * scale, scale, scale);
 					bufferGraphics.setColor(Color.YELLOW);
-					//how the fuck do I position these
 					bufferGraphics.drawString(board.getSpace(j, i) + "", (int)(j * scale + scale / 2.5), (int)(i * scale + scale / 1.5));
 				}
 			}
