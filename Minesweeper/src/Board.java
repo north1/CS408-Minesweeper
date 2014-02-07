@@ -12,8 +12,8 @@ public class Board {
 	 */
 	public Board() {
 		// TODO Make adjustments for different sizes
-		width = 10;
-		height = 10;
+		width = 9;
+		height = 9;
 		spaces = new int[height][width];
 		hidden = new boolean[height][width];
 		for (int i = 0; i < hidden.length; i++) {
@@ -29,8 +29,6 @@ public class Board {
 	 * @param y The Y coordinate of the clicked space
 	 */
 	public void click(int x, int y) {
-		System.out.println("Clicked: (" + x + ", " + y + ")");
-		hidden[y][x] = false;
 	}
 
 	/**

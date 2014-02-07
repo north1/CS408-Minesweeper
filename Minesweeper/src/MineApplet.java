@@ -46,7 +46,6 @@ public class MineApplet extends Applet implements MouseListener {
 		if (board == null) {
 			return;
 		}
-		System.out.println("init");
 		setPreferredSize(new Dimension(board.getWidth() * scale + 1,
 				board.getHeight() * scale + 1));
 		addMouseListener(this);
@@ -57,7 +56,6 @@ public class MineApplet extends Applet implements MouseListener {
 	 */
 	public void initGraphics() {
 		try {
-			System.out.println("initGraphics");
 			offscreen = createImage(board.getWidth() * scale, board.getHeight()
 					* scale);
 			bufferGraphics = offscreen.getGraphics();
@@ -73,7 +71,6 @@ public class MineApplet extends Applet implements MouseListener {
 	 * method
 	 */
 	public void updateImage() {
-		System.out.println("updateImage");
 		// Paint the spaces
 		for(int i = 0; i < board.getHeight(); i++) {
 			for(int j = 0; j < board.getWidth(); j++) {
