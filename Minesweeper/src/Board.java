@@ -11,7 +11,13 @@ public class Board {
 
 	private int width;
 	private int height;
-
+	
+	public MineApplet myapplet; //temp for debug
+	
+	public void setMyapplet(MineApplet app) {
+		myapplet = app;
+	}
+	
 	/**
 	 * Default constructor
 	 */
@@ -117,14 +123,21 @@ public class Board {
 	 * http://www.techuser.net/minecascade.html
 	 * 
 	 */
-	private void uncoverCluster(int x, int y) {
+	private void uncoverCluster(int x, int y) {		
 		if (spaces[y][x] > 0) {return;}
+		
+		boolean beenChecked[][] = new boolean[height][width];
+		for (int i = 0; i < beenChecked.length; i++) {
+			for (int j = 0; j < beenChecked[i].length; j++) {
+				beenChecked[i][j] = false;
+			}
+		}
 		
 		Queue<int[]> q = new LinkedList<int[]>();
 		int[] point = {x,y};
 		q.add(point);
 		
-		while (!q.isEmpty()) {
+		while (!q.isEmpty()) {		
 			int cur[] = q.poll();
 			int adj[][] = getAdjacent(cur[0],cur[1]);
 			boolean foundAdjacentMine = false;
@@ -136,11 +149,15 @@ public class Board {
 				} catch(IndexOutOfBoundsException e) { /*ignore*/ }
 			}
 			if (!foundAdjacentMine) {
-				System.out.println("in the thing");
 				for (int i = 0; i < 8; i++) {
 					try {
 						hidden[adj[i][0]][adj[i][1]] = false;
-						q.add(adj[i]);
+						myapplet.updateImage();
+						myapplet.repaint();
+						if (!beenChecked[adj[i][0]][adj[i][1]]) {
+							q.add(adj[i]);
+							beenChecked[adj[i][0]][adj[i][1]] = true;
+						}
 					} catch(IndexOutOfBoundsException e) { /*ignore */ }
 				}
 			}

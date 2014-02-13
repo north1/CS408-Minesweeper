@@ -41,6 +41,7 @@ public class MainGUI extends JFrame {
 		// Set up board and applet
 		Board board = new Board();
 		mineApplet = new MineApplet(board, 25);
+		board.setMyapplet(mineApplet);
 		mainPanel.add(mineApplet);
 		
 		add(mainPanel, BorderLayout.CENTER);
