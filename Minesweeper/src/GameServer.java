@@ -124,8 +124,8 @@ public class GameServer {
 
         public boolean checkForDups(String[] nameList){
           boolean duplicates = false;
-          for(int j = 0; j < nameList.Length; j++)
-            for(int k = j+1; k<nameList.Length;k++)
+          for(int j = 0; j < nameList.length; j++)
+            for(int k = j+1; k<nameList.length;k++)
               if(k!=j && nameList[k] == nameList[j])
                 duplicates = true;
           return duplicates;
