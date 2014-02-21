@@ -12,13 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-/**
- * A simple Swing-based client for the capitalization server.
- * It has a main frame window with a text field for entering
- * strings and a textarea to see the results of capitalizing
- * them.
- */
-public class GameClient {
+
+public class GameClient extends Thread{
 
     private BufferedReader in;
     private PrintWriter out;
@@ -26,30 +21,19 @@ public class GameClient {
     private JTextField dataField = new JTextField(40);
     private JTextArea messageArea = new JTextArea(8, 60);
 
-    /**
-     * Constructs the client by laying out the GUI and registering a
-     * listener with the textfield so that pressing Enter in the
-     * listener sends the textfield contents to the server.
-     */
-    public GameClient() {
 
+    public GameClient() {
+	
         // Layout GUI
         messageArea.setEditable(false);
         frame.getContentPane().add(dataField, "North");
         frame.getContentPane().add(new JScrollPane(messageArea), "Center");
-
+	
         // Add Listeners
         dataField.addActionListener(new ActionListener() {
-            /**
-             * Responds to pressing the enter key in the textfield
-             * by sending the contents of the text field to the
-             * server and displaying the response from the server
-             * in the text area.  If the response is "." we exit
-             * the whole application, which closes all sockets,
-             * streams and windows.
-             */
+
             public void actionPerformed(ActionEvent e) {
-                out.println(dataField.getText());
+                out.println(dataField.getText()+"\n");
                    String response;
                 try {
                     response = in.readLine();
@@ -63,22 +47,29 @@ public class GameClient {
                 dataField.selectAll();
             }
         });
+	
+	
     }
 
-    /**
-     * Implements the connection logic by prompting the end user for
-     * the server's IP address, connecting, setting up streams, and
-     * consuming the welcome messages from the server.  The Game
-     * protocol says that the server sends three lines of text to the
-     * client immediately after establishing a connection.
-     */
+    public void run(){
+	while(true){
+		try{
+			String res = in.readLine();
+			messageArea.append(res+"\n");
+		}
+		catch(IOException ex){
+			
+		}
+	}	
+    }	
+
     public void connectToServer() throws IOException {
 
         // Get the server address from a dialog box.
         String serverAddress = JOptionPane.showInputDialog(
             frame,
             "Enter IP Address of the Server:",
-            "Welcome to the Capitalization Program",
+            "Welcome",
             JOptionPane.QUESTION_MESSAGE);
 
         // Make connection and initialize streams
@@ -87,10 +78,7 @@ public class GameClient {
                 new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
 
-        // Consume the initial welcoming messages from the server
-        for (int i = 0; i < 3; i++) {
-            messageArea.append(in.readLine() + "\n");
-        }
+
     }
 
     /**
@@ -102,5 +90,7 @@ public class GameClient {
         client.frame.pack();
         client.frame.setVisible(true);
         client.connectToServer();
+	GameClient c = new GameClient();
+	c.start();
     }
 }

@@ -6,20 +6,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 import java.lang.*;
+import java.io.*;
 
-/**
- * A server program which accepts requests from clients to
- * Game strings.  When clients connect, a new thread is
- * started to handle an interactive dialog in which the client
- * sends in a string and the server thread sends back the
- * Gamed version of the string.
- *
- * The program is runs in an infinite loop, so shutdown in platform
- * dependent.  If you ran it from a console window with the "java"
- * interpreter, Ctrl+C generally will shut it down.
- */
 public class GameServer {
 
+    public static String[] nameList = new String[256];
+    public static int ind = 0;
+    public static Socket[] clientList = new Socket[256];
 
     public static void main(String[] args) throws Exception {
 
@@ -27,53 +20,39 @@ public class GameServer {
         ServerSocket listener = new ServerSocket(9898);
         try {
             while (true) {
-                new Game(listener.accept(), clientNumber++).start();
+		Socket s = listener.accept();
+                Game g = new Game(s, clientNumber++);
+		g.start();
             }
         } finally {
             listener.close();
         }
     }
 
-    /**
-     * A private thread to handle capitalization requests on a particular
-     * socket.  The client terminates the dialogue by sending a single line
-     * containing only a period.
-     */
+
     private static class Game extends Thread {
         private Socket socket;
         private int clientNumber;
-	public String[] nameList = new String[256];
-	private int ind = 0;
+
+	
 
         public Game(Socket socket, int clientNumber) {
             this.socket = socket;
             this.clientNumber = clientNumber;
+	    
             log("New connection with client# " + clientNumber + " at " + socket);
         }
 
-        /**
-         * Services this thread's client by first sending the
-         * client a welcome message then repeatedly reading strings
-         * and sending back the Gamed version of the string.
-         */
+
         public void run() {
             try {
 
-                // Decorate the streams so we can send characters
-                // and not just bytes.  Ensure output is flushed
-                // after every newline.
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(socket.getInputStream()));
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
-                // Send a welcome message to the client.
-                //out.println("Hello, you are client #" + clientNumber + ".");
-                //out.println("Enter a line with only a period to quit\n");
-
-                // Get messages from the client, line by line; return them
-                // Gamed
-		out.println("Looking for opponent...");
-		out.println("----------------------------------");
+		//out.println("Looking for opponent...");
+		//out.println("----------------------------------");
                 while (true) {
                     String input = in.readLine();
                     if (input == null || input.equals(".")) {
@@ -82,20 +61,34 @@ public class GameServer {
 			//out.println(input);
 			//log(input);
 			nameList[ind] = input;
-			ind++;
-			if(checkForDups(nameList)){
+			
+			if(checkForDups(nameList,ind+1)){
 				out.println("name in use");
-				//nameList[ind] = "";
+				nameList[ind] = "";
 				//ind--;
 			}
 			else{
 				//log(input);
-				out.println(nameList[ind]);
-
+				out.println("test "+nameList[ind]);
+				clientList[ind] = socket;
+				ind++;
+				/*for(int i = 0; i < ind; i++){
+					log("list["+i+"] = "+nameList[i]);	
+				}*/
 			}
+			
       if(ind >= 2){
         //more than 2 in queue, so match 2 random people together
         //connect 2 clients
+	PrintWriter os = new PrintWriter(clientList[0].getOutputStream(), true);
+	BufferedReader is = new BufferedReader(
+                        new InputStreamReader(clientList[1].getInputStream()));
+	while(true){
+		String b = is.readLine();
+		os.println(b);
+	}
+	//send board info
+	
       }
 			/*out.println(input);
 			log(input);
@@ -122,15 +115,15 @@ public class GameServer {
             System.out.println(message);
         }
 
-        public boolean checkForDups(String[] nameList){
+        /*public boolean checkForDups(String[] nameList){
           boolean duplicates = false;
-          for(int j = 0; j < nameList.length; j++)
-            for(int k = j+1; k<nameList.length;k++)
+          for(int j = 0; j < nameList.Length; j++)
+            for(int k = j+1; k<nameList.Length;k++)
               if(k!=j && nameList[k] == nameList[j])
                 duplicates = true;
           return duplicates;
-        }
-	/*private boolean checkForDups(String[] list, int ind){
+        }*/
+	private synchronized boolean checkForDups(String[] list, int ind){
 
 		Set<String> set = new HashSet<String>();
     		for ( int i = 0; i < ind; ++i ) {
@@ -142,6 +135,6 @@ public class GameServer {
         		}
     		}
     		return false;
-	}*/
+	}
     }
 }
