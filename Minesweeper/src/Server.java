@@ -124,9 +124,101 @@ public class Server extends AbstractServer {
 			this.sendToAllClients(loginString);
 		} else if (msg.toString().equals("userlist request")) {
 			sendUserlist();
-		} else { // send the message to everyone
+		}
+		else if(msg.toString().contains("gamedata")){
+			System.out.println("gamedata");
+			// Get sending user
+			User user1 = users.get(0);
+			for(User user : users) {
+				if(user.getUsername().equals(client.user.getUsername())) {
+					user1 = user;
+					System.out.println("Sender: " + user1.getUsername());
+					break;
+				}
+			}
+
+			ConnectionToClient ctc = (ConnectionToClient)this.getClientConnections()[0];
+			System.out.println("ctc = "+ctc.toString());			
+			boolean foundPair = false;
+			System.out.println("paired name = "+ user1.getPaired().getUsername());
+			for(User user : users) {
+				System.out.println("user name = "+user.getUsername());
+				// Find the paired user
+				if(user1.getPaired().getUsername().equals(user.getUsername())) {	
+					System.out.println("in first if");				
+					// Find connection for paired user
+					Thread[] connections = this.getClientConnections();
+					for(int i = 0; i < connections.length; i++) {
+						if(((ConnectionToClient)connections[i]).user.getUsername().equals(user.getUsername())) {
+							System.out.println("connection found");
+							// Set ctc to paired user's CTC
+							ctc = (ConnectionToClient)connections[i];
+							foundPair = true;
+						}
+						
+					}
+				}
+				else{
+					System.out.println(user1.getPaired().getUsername()+" didn't = "+user.getUsername());
+					
+				}
+			}
+
+			// Send gamedata message to paired user
+			try {
+			if(ctc != null && foundPair ){ 
+				System.out.println("attempting to send message to "+ctc.toString());				
+				ctc.sendToClient(msg);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+
+		}
+		else if(msg.toString().contains("::connect")){
+			// Get sending user
+			User u1 = users.get(0);
+			for(User user : users) {
+				if(user.getUsername().equals(client.user.getUsername())) {
+					u1 = user;
+					System.out.println("Sender: " + u1.getUsername());
+					break;
+				}
+			}
+
+			//do the connects
+			StringTokenizer st = new StringTokenizer(msg.toString());
+			st.nextToken();
+			User u2 = users.get(0);
+			String uname = "";
+			boolean foundUser = false;
+			while(st.hasMoreTokens()){
+				uname = st.nextToken();
+				if(uname.contains("::connect")){
+					uname = st.nextToken();
+					for(User user : users){
+						if(user.getUsername().equals(uname)){
+							u2 = user;
+							foundUser = true;
+							break;
+						}
+					}
+				}
+			}
+			if(foundUser) {
+				u1.setPaired(u2);
+				u2.setPaired(u1);
+				System.out.println(u1.getPaired().getUsername());
+				System.out.println(u2.getPaired().getUsername());
+				//add to list of pairs
+				this.sendToAllClients("connecting "+u1.getUsername()+" and "+u2.getUsername());
+			}
+		}
+		 else { // send the message to everyone
 			this.sendToAllClients(msg);
 		}
+		
 	}
 
 	private void writeUsers() {
