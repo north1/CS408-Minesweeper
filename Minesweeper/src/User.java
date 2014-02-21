@@ -29,6 +29,10 @@ public class User {
 		return clientDescription;
 	}
 	
+	public void setDescription(String desc) {
+		clientDescription = desc;
+	}
+	
 	public boolean equalsUser(User user) {
 		return (username.equals(user.getUsername()) && clientDescription.equals(user.getDescription()));
 	}

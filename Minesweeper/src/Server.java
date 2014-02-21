@@ -113,7 +113,15 @@ public class Server extends AbstractServer {
 						+ " was not found in file");
 				User user2 = new User(user.getUsername(), password);
 				users.add(user2);
+				user2.setDescription(client.toString());
 				writeUsers();
+				user = user2;
+				try {
+					System.out.println("Auth success");
+					client.sendToClient("Auth success");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 
 			client.user = user;
