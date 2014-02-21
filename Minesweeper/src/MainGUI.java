@@ -88,25 +88,7 @@ public class MainGUI extends JFrame {
 	 * Opens the dialog to connect to another player
 	 */
 	public void connectToPlayer() {
-		System.out.println("Connect to player");
-		JFrame connectFrame = new JFrame("Connect to player");
-		JPanel connectPanel = new JPanel();
-		JPanel buttonPanel = new JPanel();
-		JButton refreshButton = new JButton("Refresh list");
-		JButton connectButton = new JButton("Connect");
-		
-		connectFrame.setLayout(new BorderLayout(3, 3));
-		
-		connectPanel.setPreferredSize(new Dimension(800, 500));
-		
-		buttonPanel.add(connectButton);
-		buttonPanel.add(refreshButton);
-		buttonPanel.setPreferredSize(new Dimension(800, 50));
-		
-		connectFrame.add(connectPanel, BorderLayout.CENTER);
-		connectFrame.add(buttonPanel, BorderLayout.SOUTH);
-		connectFrame.pack();
-		connectFrame.setVisible(true);
+		ClientMain cm = new ClientMain("127.0.0.1", 8043);
 	}
 	
 	/**

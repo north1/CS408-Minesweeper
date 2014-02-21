@@ -31,7 +31,7 @@ public class ClientMain extends JFrame {
 	private int port;
 	private ClientMain object;
 
-	private ClientMain(String server, int port) {
+	public ClientMain(String server, int port) {
 		super("Minesweeper Chat");
 		this.server = server;
 		this.port = port;
