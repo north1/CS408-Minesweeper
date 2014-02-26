@@ -13,6 +13,7 @@ public class MineApplet extends Applet implements MouseListener {
 	private Image offscreen;
 	private int scale;
 	private char[][] marks;
+	private boolean clickable;
 
 	private Board board;
 
@@ -27,6 +28,7 @@ public class MineApplet extends Applet implements MouseListener {
 		this.scale = scale;
 		init();
 		repaint();
+		setClickable(false);
 	}
 
 	/**
@@ -88,8 +90,8 @@ public class MineApplet extends Applet implements MouseListener {
 					} else if (marks[i][j] == 'f') { // flag
 						bufferGraphics.setColor(Color.WHITE);
 						bufferGraphics.drawString("!",
-								(int) (j * scale + scale / 2), (int) (i
-										* scale + scale / 1.5));
+								(int) (j * scale + scale / 2),
+								(int) (i * scale + scale / 1.5));
 					}
 				} else if (board.getSpace(j, i) == -1) { // uncovered bomb
 					bufferGraphics.setColor(Color.RED);
@@ -137,29 +139,60 @@ public class MineApplet extends Applet implements MouseListener {
 		paint(g);
 	}
 
+	/**
+	 * Sets the applet to be clickable or not
+	 * @param clickable
+	 */
+	public void setClickable(boolean clickable) {
+		this.clickable = clickable;
+	}
+
+	/**
+	 * Tells if the applet is clickable
+	 * @return If the applet responds to click or not
+	 */
+	public boolean isClickable() {
+		return clickable;
+	}
+	
+	/**
+	 * Sends a click to the board.  Used for multiplayer
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 */
+	public void sendClick(int x, int y) {
+		if (board.isHidden(x, y)) {
+			board.leftClick(x, y);
+			updateImage();
+			repaint();
+		}
+	}
+
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		int x = arg0.getX() / scale;
 		int y = arg0.getY() / scale;
 
-		if (arg0.getButton() == MouseEvent.BUTTON1) {
-			// Left Click. Reveal space
-			if (board.isHidden(x, y)) {
-				board.leftClick(x, y);
+		if (isClickable()) {
+			if (arg0.getButton() == MouseEvent.BUTTON1) {
+				// Left Click. Reveal space
+				if (board.isHidden(x, y)) {
+					board.leftClick(x, y);
+					updateImage();
+					repaint();
+				}
+			} else if (arg0.getButton() == MouseEvent.BUTTON3) {
+				// Right Click. Rotate mark
+				if (marks[y][x] == 'q') {
+					marks[y][x] = 'e'; // question -> empty
+				} else if (marks[y][x] == 'f') {
+					marks[y][x] = 'q'; // flag -> question
+				} else {
+					marks[y][x] = 'f'; // empty -> flag
+				}
 				updateImage();
 				repaint();
 			}
-		} else if (arg0.getButton() == MouseEvent.BUTTON3) {
-			// Right Click. Rotate mark
-			if(marks[y][x] == 'q') {
-				marks[y][x] = 'e'; //question -> empty
-			} else if(marks[y][x] == 'f') {
-				marks[y][x] = 'q'; // flag -> question
-			} else {
-				marks[y][x] = 'f'; // empty -> flag
-			}
-			updateImage();
-			repaint();
 		}
 
 	}

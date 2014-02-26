@@ -30,11 +30,13 @@ public class ClientMain extends JFrame {
 	private String server;
 	private int port;
 	private ClientMain object;
+	private MainGUI mainGUI;
 
-	public ClientMain(String server, int port) {
+	public ClientMain(String server, int port, MainGUI mainGUI) {
 		super("Minesweeper Chat");
 		this.server = server;
 		this.port = port;
+		this.mainGUI = mainGUI;
 		enterCredentials();
 	}
 
@@ -200,6 +202,32 @@ public class ClientMain extends JFrame {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		} else if (str.contains("gamedata")) {
+			System.out.println("Gamedata: " + str);
+			StringTokenizer st = new StringTokenizer(str);
+			String token = st.nextToken();
+			while (!token.equals("gamedata")) {
+				token = st.nextToken();
+			}
+			// Get the type of gamedata
+			token = st.nextToken();
+			if (token.equals("board")) {
+				int height = Integer.parseInt(st.nextToken());
+				int width = Integer.parseInt(st.nextToken());
+				Board board = new Board(height, width);
+				int[][] spaces = new int[height][width];
+				for (int i = 0; i < height; i++) {
+					for (int j = 0; j < width; j++) {
+						spaces[i][j] = Integer.parseInt(st.nextToken());
+					}
+				}
+				board.setSpaces(spaces);
+				mainGUI.initSecondPlayer(board);
+			} else if (token.equals("click")) {
+				int x = Integer.parseInt(st.nextToken());
+				int y = Integer.parseInt(st.nextToken());
+				mainGUI.secondClick(x, y);
+			}
 		} else {
 			if (chatArea != null) {
 				chatArea.append("\n" + str);
@@ -214,11 +242,12 @@ public class ClientMain extends JFrame {
 		@SuppressWarnings("unused")
 		ClientMain cm = null;
 		if (args.length == 0) {
-			cm = new ClientMain("moore06.cs.purdue.edu", 8043);
+			cm = new ClientMain("moore06.cs.purdue.edu", 8043, null);
 		} else if (args.length == 1) {
-			cm = new ClientMain("data.cs.purdue.edu", Integer.parseInt(args[0]));
+			cm = new ClientMain("data.cs.purdue.edu",
+					Integer.parseInt(args[0]), null);
 		} else if (args.length == 2) {
-			cm = new ClientMain(args[0], Integer.parseInt(args[1]));
+			cm = new ClientMain(args[0], Integer.parseInt(args[1]), null);
 		} else {
 			System.out.println(usageString);
 		}

@@ -1,5 +1,4 @@
-import java.io.*;
-import java.util.Scanner;
+import java.io.IOException;
 
 public class Client extends AbstractClient {
 
@@ -18,31 +17,8 @@ public class Client extends AbstractClient {
 
 	protected void handleMessageFromServer(Object msg) {
 		String message = msg.toString();
-		if(message.contains("gamedata")) {
-			System.out.println("Gamedata: " + message);
-		}
 		// System.out.println(message);
 		cm.handleMessageFromClient(message);
-		/*
-		 * //System.out.println("message received"); if (msg == null){
-		 * System.out.println("Client Error: msg from Server empty"); return; }
-		 * 
-		 * if (msg instanceof String) { System.out.println("FAILURE");
-		 * MainActivity.changeCreds(); MainActivity.changeWaiting(); } else {
-		 * 
-		 * user = (User) msg; userName = user.getUsername(); currentBalance =
-		 * user.getBalance(); userTransactions = user.getTransactions();
-		 * numTransactions = user.getNumTransactions();
-		 * 
-		 * //System.out.println(userName + " " + currentBalance); for (int i =
-		 * 0; i < 5; i++) { System.out.println(userTransactions[i].getDate() +
-		 * " " + userTransactions[i].getLocation() + " " +
-		 * userTransactions[i].getAmount()); } MainActivity.changeWaiting(); /*
-		 * try { closeConnection(); } catch (IOException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); }
-		 */
-		// setNewLastFiveTransactions();
-		// }
 	}
 
 	/*

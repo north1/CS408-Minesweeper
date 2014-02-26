@@ -18,6 +18,7 @@ public class MainGUI extends JFrame {
 	
 	// Panels
 	private JPanel mainPanel;
+	private JPanel secondPanel;
 	
 	// Menus
 	private JMenuBar menuBar;
@@ -26,8 +27,12 @@ public class MainGUI extends JFrame {
 	private JMenuItem createBoard;
 	private JMenuItem connectToPlayer;
 	
+	private ClientMain clientMain;
+	
 	// Applets 
 	private static MineApplet mineApplet;
+	private static MineApplet secondApplet;
+	
 	/**
 	 * Default constructor for the GUI
 	 */
@@ -71,6 +76,7 @@ public class MainGUI extends JFrame {
 		// Set up board and applet
 		Board board = new Board();
 		mineApplet = new MineApplet(board, 25);
+		mineApplet.setClickable(true);
 		board.setMyapplet(mineApplet);
 		mainPanel.add(mineApplet);
 		
@@ -85,10 +91,38 @@ public class MainGUI extends JFrame {
 	}
 	
 	/**
+	 * Initializes a second player's board
+	 * @param board The underlying board.
+	 */
+	public void initSecondPlayer(Board board) {
+		secondPanel = new JPanel();
+		
+		secondApplet = new MineApplet(board, 25);
+		secondApplet.setClickable(false);
+		board.setMyapplet(secondApplet);
+		secondPanel.add(secondApplet);
+		
+		add(secondPanel, BorderLayout.CENTER);
+		
+		secondApplet.initGraphics();
+	}
+	
+	/**
+	 * Sends a click to the applet from the second player
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 */
+	public void secondClick(int x, int y) {
+		if(secondApplet != null) {
+			secondApplet.sendClick(x, y);
+		}
+	}
+	
+	/**
 	 * Opens the dialog to connect to another player
 	 */
 	public void connectToPlayer() {
-		ClientMain cm = new ClientMain("127.0.0.1", 8043);
+		clientMain = new ClientMain("127.0.0.1", 8043, this);
 	}
 	
 	/**
