@@ -15,7 +15,7 @@ public class MineApplet extends Applet implements MouseListener {
 	private int scale;
 	private char[][] marks;
 	private boolean clickable;
-	
+
 	private MainGUI mainGUI;
 
 	private Board board;
@@ -43,7 +43,7 @@ public class MineApplet extends Applet implements MouseListener {
 	 */
 	public void newBoard(Board board) {
 		this.board = board;
-//		this.board.setupBoardRandom(15); // TEMPORARY
+		// this.board.setupBoardRandom(15); // TEMPORARY
 		// this.board.unhideAll(); //TEMPORARY
 		marks = new char[board.getHeight()][board.getWidth()];
 	}
@@ -145,6 +145,7 @@ public class MineApplet extends Applet implements MouseListener {
 
 	/**
 	 * Sets the applet to be clickable or not
+	 * 
 	 * @param clickable
 	 */
 	public void setClickable(boolean clickable) {
@@ -153,20 +154,39 @@ public class MineApplet extends Applet implements MouseListener {
 
 	/**
 	 * Tells if the applet is clickable
+	 * 
 	 * @return If the applet responds to click or not
 	 */
 	public boolean isClickable() {
 		return clickable;
 	}
-	
+
 	/**
-	 * Sends a click to the board.  Used for multiplayer
-	 * @param x X coordinate
-	 * @param y Y coordinate
+	 * Sends a click to the board. Used for multiplayer
+	 * 
+	 * @param x
+	 *            X coordinate
+	 * @param y
+	 *            Y coordinate
+	 * @param left
+	 *            True for left click, false for right
 	 */
-	public void sendClick(int x, int y) {
-		if (board.isHidden(x, y)) {
-			board.leftClick(x, y);
+	public void clicked(int x, int y, boolean left) {
+		if (left) {
+			if (board.isHidden(x, y)) {
+				board.leftClick(x, y);
+				updateImage();
+				repaint();
+			}
+		} else {
+			// Right Click. Rotate mark
+			if (marks[y][x] == 'q') {
+				marks[y][x] = 'e'; // question -> empty
+			} else if (marks[y][x] == 'f') {
+				marks[y][x] = 'q'; // flag -> question
+			} else {
+				marks[y][x] = 'f'; // empty -> flag
+			}
 			updateImage();
 			repaint();
 		}
@@ -179,30 +199,33 @@ public class MineApplet extends Applet implements MouseListener {
 
 		if (isClickable()) {
 			if (arg0.getButton() == MouseEvent.BUTTON1) {
-				// Left Click. Reveal space
-				if (board.isHidden(x, y)) {
-					board.leftClick(x, y);
-					updateImage();
-					repaint();
-				}
+				clicked(x, y, true);
 				// Send click to server
 				try {
-					mainGUI.getClient().client.sendToServer("gamedata click " + x + " " + y);
+					if (mainGUI.getClient() != null) {
+						if (mainGUI.getClient().isConnectedToPlayer()) {
+							mainGUI.getClient().client
+									.sendToServer("gamedata click " + x + " "
+											+ y);
+						}
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 
 			} else if (arg0.getButton() == MouseEvent.BUTTON3) {
-				// Right Click. Rotate mark
-				if (marks[y][x] == 'q') {
-					marks[y][x] = 'e'; // question -> empty
-				} else if (marks[y][x] == 'f') {
-					marks[y][x] = 'q'; // flag -> question
-				} else {
-					marks[y][x] = 'f'; // empty -> flag
+				clicked(x, y, false);
+				try {
+					if (mainGUI.getClient() != null) {
+						if (mainGUI.getClient().isConnectedToPlayer()) {
+							mainGUI.getClient().client
+									.sendToServer("gamedata rightclick " + x
+											+ " " + y);
+						}
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-				updateImage();
-				repaint();
 			}
 		}
 

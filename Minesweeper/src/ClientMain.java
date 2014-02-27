@@ -30,6 +30,7 @@ public class ClientMain extends JFrame {
 	private int port;
 	private ClientMain object;
 	private MainGUI mainGUI;
+	private boolean isConnectedToPlayer;
 	
 	public Client client;
 
@@ -38,6 +39,7 @@ public class ClientMain extends JFrame {
 		this.server = server;
 		this.port = port;
 		this.mainGUI = mainGUI;
+		setConnectedToPlayer(false);
 		enterCredentials();
 	}
 
@@ -78,6 +80,22 @@ public class ClientMain extends JFrame {
 		pack();
 		addWindowListener(windowListener);
 		setVisible(true);
+	}
+	
+	/**
+	 * Sets the connection status
+	 * @param connected
+	 */
+	public void setConnectedToPlayer(boolean connected) {
+		isConnectedToPlayer = connected;
+	}
+	
+	/**
+	 * Shows whether the user is currently connected to another user
+	 * @return The connection status to another user
+	 */
+	public boolean isConnectedToPlayer() {
+		return isConnectedToPlayer;
 	}
 
 	private WindowListener windowListener = new WindowListener() {
@@ -204,6 +222,9 @@ public class ClientMain extends JFrame {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		} else if(str.startsWith("disconnect")) {
+			setConnectedToPlayer(false);
+			mainGUI.removeSecondPlayer();
 		} else if (str.contains("gamedata")) {
 			System.out.println("Gamedata: " + str);
 			StringTokenizer st = new StringTokenizer(str);
@@ -214,6 +235,7 @@ public class ClientMain extends JFrame {
 			// Get the type of gamedata
 			token = st.nextToken();
 			if (token.equals("board")) { // sending viewable board
+				setConnectedToPlayer(true);
 				int height = Integer.parseInt(st.nextToken());
 				int width = Integer.parseInt(st.nextToken());
 				Board board = new Board(height, width);
@@ -226,11 +248,16 @@ public class ClientMain extends JFrame {
 				board.setSpaces(spaces);
 				System.out.println("2ndBoard: Width: " + board.getWidth() + "\tHeight: " + board.getHeight());
 				mainGUI.initSecondPlayer(board);
-			} else if (token.equals("click")) { // sending player 2's click
+			} else if (token.equals("click")) { // sending player 2's left click
 				int x = Integer.parseInt(st.nextToken());
 				int y = Integer.parseInt(st.nextToken());
-				mainGUI.secondClick(x, y);
+				mainGUI.secondClick(x, y, true);
+			} else if (token.equals("rightclick")) { // sending player 2's right click
+				int x = Integer.parseInt(st.nextToken());
+				int y = Integer.parseInt(st.nextToken());
+				mainGUI.secondClick(x, y, false);
 			} else if(token.equals("yourboard")) { // sending playable board
+			
 				int height = Integer.parseInt(st.nextToken());
 				int width = Integer.parseInt(st.nextToken());
 				Board board = new Board(height, width);

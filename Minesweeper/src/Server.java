@@ -133,23 +133,22 @@ public class Server extends AbstractServer {
 		} else if (msg.toString().equals("userlist request")) {
 			sendUserlist();
 		} else if (msg.toString().contains("gamedata")) {
-			System.out.println("gamedata");
+			// System.out.println("gamedata");
 			// Get sending user
 			User user1 = users.get(0);
 			for (User user : users) {
 				if (user.getUsername().equals(client.user.getUsername())) {
 					user1 = user;
-					System.out.println("Sender: " + user1.getUsername());
 					break;
 				}
 			}
 
 			ConnectionToClient ctc = (ConnectionToClient) this
 					.getClientConnections()[0];
-			System.out.println("ctc = " + ctc.toString());
+			// System.out.println("ctc = " + ctc.toString());
 			boolean foundPair = false;
-			System.out.println("paired name = "
-					+ user1.getPaired().getUsername());
+			// System.out.println("paired name = "
+			// + user1.getPaired().getUsername());
 			for (User user : users) {
 				// Find the paired user
 				if (user1.getPaired().getUsername().equals(user.getUsername())) {
@@ -158,7 +157,7 @@ public class Server extends AbstractServer {
 					for (int i = 0; i < connections.length; i++) {
 						if (((ConnectionToClient) connections[i]).user
 								.getUsername().equals(user.getUsername())) {
-							System.out.println("connection found");
+							// System.out.println("connection found");
 							// Set ctc to paired user's CTC
 							ctc = (ConnectionToClient) connections[i];
 							foundPair = true;
@@ -166,8 +165,8 @@ public class Server extends AbstractServer {
 
 					}
 				} else {
-					System.out.println(user1.getPaired().getUsername()
-							+ " didn't = " + user.getUsername());
+					// System.out.println(user1.getPaired().getUsername()
+					// + " didn't = " + user.getUsername());
 
 				}
 			}
@@ -175,21 +174,20 @@ public class Server extends AbstractServer {
 			// Send gamedata message to paired user
 			try {
 				if (ctc != null && foundPair) {
-					System.out.println("attempting to send message to "
-							+ ctc.toString());
+					// System.out.println("attempting to send message to "
+					// + ctc.toString());
 					ctc.sendToClient(msg);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
-		} else if (msg.toString().contains("::connect")) {
+		} else if (msg.toString().contains("::connect")) { // connect 2 users
 			// Get sending user
 			User u1 = users.get(0);
 			for (User user : users) {
 				if (user.getUsername().equals(client.user.getUsername())) {
 					u1 = user;
-					System.out.println("Sender: " + u1.getUsername());
 					break;
 				}
 			}
@@ -204,27 +202,105 @@ public class Server extends AbstractServer {
 				uname = st.nextToken();
 				if (uname.contains("::connect")) {
 					uname = st.nextToken();
-					for (User user : users) {
-						if (user.getUsername().equals(uname)) {
-							u2 = user;
-							foundUser = true;
-							break;
+					// Make sure you don't pair with yourself
+					if (!uname.equals(u1.getUsername())) {
+						// Find correct user to pair with
+						for (User user : users) {
+							if (user.getUsername().equals(uname)) {
+								u2 = user;
+								foundUser = true;
+								break;
+							}
 						}
 					}
 				}
 			}
 
 			if (foundUser) {
-				u1.setPaired(u2);
-				u2.setPaired(u1);
-				System.out.println(u1.getPaired().getUsername());
-				System.out.println(u2.getPaired().getUsername());
-				// add to list of pairs
-				this.sendToAllClients("connecting " + u1.getUsername()
-						+ " and " + u2.getUsername());
+				// Both users are available to be paired
+				if (u1.getPaired() == null && u2.getPaired() == null) {
+					u1.setPaired(u2);
+					u2.setPaired(u1);
+					System.out.println(u1.getPaired().getUsername());
+					System.out.println(u2.getPaired().getUsername());
+					// add to list of pairs
+					this.sendToAllClients("connecting " + u1.getUsername()
+							+ " and " + u2.getUsername());
 
-				swapBoards(u1, u2);
+					swapBoards(u1, u2);
+				} else if (u1.getPaired() != null) { // Send failure messages
+					try {
+						client.sendToClient("You are already paired with a user.  Type ::disconnect to unpair yourself");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} else if (u2.getPaired() != null) {
+					try {
+						client.sendToClient(u2.getUsername()
+								+ " is already paired with a user.  They must disconnect before you can pair with them");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			} else {
+				System.out.println("foundUser = false");
 			}
+		} else if (msg.toString().contains("::disconnect")) {
+			// disconnect a user from their pair
+			// Get sending user
+			User u1 = users.get(0);
+			boolean foundUser = false;
+			for (User user : users) {
+				if (user.getUsername().equals(client.user.getUsername())) {
+					u1 = user;
+					foundUser = true;
+					break;
+				}
+			}
+
+			// Search for paired user
+			// This is so both users can receive a disconnect message
+			ConnectionToClient ctc = (ConnectionToClient) this
+					.getClientConnections()[0];
+			System.out.println("ctc = " + ctc.toString());
+			boolean foundPair = false;
+			for (User user : users) {
+				// Find the paired user
+				if (u1.getPaired().getUsername().equals(user.getUsername())) {
+					// Find connection for paired user
+					Thread[] connections = this.getClientConnections();
+					for (int i = 0; i < connections.length; i++) {
+						if (((ConnectionToClient) connections[i]).user
+								.getUsername().equals(user.getUsername())) {
+							System.out.println("connection found");
+							// Set ctc to paired user's CTC
+							ctc = (ConnectionToClient) connections[i];
+							foundPair = true;
+						}
+
+					}
+				}
+			}
+
+			if (foundUser) {
+				if (u1.getPaired() != null) {
+					u1.getPaired().setPaired(null);
+				}
+				u1.setPaired(null);
+				try {
+					client.sendToClient("disconnect");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (foundPair) {
+				try {
+					ctc.sendToClient("disconnect");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
 		} else { // send the message to everyone
 			this.sendToAllClients(msg);
 		}
@@ -251,26 +327,26 @@ public class Server extends AbstractServer {
 				.getClientConnections()[0];
 		boolean founduser1 = false;
 		boolean founduser2 = false;
-		
-				Thread[] connections = this.getClientConnections();
-				for (int i = 0; i < connections.length; i++) {
-					// Check for user1
-					if (((ConnectionToClient) connections[i]).user
-							.getUsername().equals(user1.getUsername())) {
-						System.out.println("connection found");
-						ctc1 = (ConnectionToClient) connections[i];
-						founduser1 = true;
-					}
-					
-					// Check for user2
-					if (((ConnectionToClient) connections[i]).user
-							.getUsername().equals(user2.getUsername())) {
-						System.out.println("connection found");
-						ctc2 = (ConnectionToClient) connections[i];
-						founduser2 = true;
-					}
 
-				}			
+		Thread[] connections = this.getClientConnections();
+		for (int i = 0; i < connections.length; i++) {
+			// Check for user1
+			if (((ConnectionToClient) connections[i]).user.getUsername()
+					.equals(user1.getUsername())) {
+				System.out.println("connection found");
+				ctc1 = (ConnectionToClient) connections[i];
+				founduser1 = true;
+			}
+
+			// Check for user2
+			if (((ConnectionToClient) connections[i]).user.getUsername()
+					.equals(user2.getUsername())) {
+				System.out.println("connection found");
+				ctc2 = (ConnectionToClient) connections[i];
+				founduser2 = true;
+			}
+
+		}
 
 		// Send gamedata message to paired user
 		try {
@@ -278,18 +354,20 @@ public class Server extends AbstractServer {
 			if (ctc1 != null && founduser1 && founduser2) {
 				System.out.println("attempting to send yourboard to "
 						+ ctc1.toString());
-				String msg = "gamedata yourboard " + board1.getHeight() + " " + board1.getWidth();
-				for(int i = 0; i < board1.getHeight(); i++) {
-					for(int j = 0; j < board1.getWidth(); j++) {
+				String msg = "gamedata yourboard " + board1.getHeight() + " "
+						+ board1.getWidth();
+				for (int i = 0; i < board1.getHeight(); i++) {
+					for (int j = 0; j < board1.getWidth(); j++) {
 						msg += " " + board1.getSpace(j, i);
 					}
 				}
 				ctc1.sendToClient(msg);
 				System.out.println("attempting to send board to "
 						+ ctc1.toString());
-				msg = "gamedata board " + board2.getHeight() + " " + board2.getWidth();
-				for(int i = 0; i < board2.getHeight(); i++) {
-					for(int j = 0; j < board2.getWidth(); j++) {
+				msg = "gamedata board " + board2.getHeight() + " "
+						+ board2.getWidth();
+				for (int i = 0; i < board2.getHeight(); i++) {
+					for (int j = 0; j < board2.getWidth(); j++) {
 						msg += " " + board2.getSpace(j, i);
 					}
 				}
@@ -299,18 +377,20 @@ public class Server extends AbstractServer {
 			if (ctc2 != null && founduser1 && founduser2) {
 				System.out.println("attempting to send yourboard to "
 						+ ctc2.toString());
-				String msg = "gamedata yourboard " + board2.getHeight() + " " + board2.getWidth();
-				for(int i = 0; i < board2.getHeight(); i++) {
-					for(int j = 0; j < board2.getWidth(); j++) {
+				String msg = "gamedata yourboard " + board2.getHeight() + " "
+						+ board2.getWidth();
+				for (int i = 0; i < board2.getHeight(); i++) {
+					for (int j = 0; j < board2.getWidth(); j++) {
 						msg += " " + board2.getSpace(j, i);
 					}
 				}
 				ctc2.sendToClient(msg);
 				System.out.println("attempting to send board to "
 						+ ctc2.toString());
-				msg = "gamedata board " + board1.getHeight() + " " + board1.getWidth();
-				for(int i = 0; i < board1.getHeight(); i++) {
-					for(int j = 0; j < board1.getWidth(); j++) {
+				msg = "gamedata board " + board1.getHeight() + " "
+						+ board1.getWidth();
+				for (int i = 0; i < board1.getHeight(); i++) {
+					for (int j = 0; j < board1.getWidth(); j++) {
 						msg += " " + board1.getSpace(j, i);
 					}
 				}
@@ -352,9 +432,9 @@ public class Server extends AbstractServer {
 
 				Thread[] clientConnections = getClientConnections();
 				ArrayList<User> oldUsers = new ArrayList<User>();
-				System.out.println(System.currentTimeMillis() + "\tccSize: "
-						+ clientConnections.length + "\touSize: "
-						+ currentUsers.size());
+				// System.out.println(System.currentTimeMillis() + "\tccSize: "
+				// + clientConnections.length + "\touSize: "
+				// + currentUsers.size());
 				for (int i = 0; i < currentUsers.size(); i++) {
 					oldUsers.add(currentUsers.get(i));
 				}
