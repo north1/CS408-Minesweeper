@@ -75,7 +75,7 @@ public class MainGUI extends JFrame {
 		
 		// Set up board and applet
 		Board board = new Board();
-		mineApplet = new MineApplet(board, 25);
+		mineApplet = new MineApplet(board, 25, this);
 		mineApplet.setClickable(true);
 		board.setMyapplet(mineApplet);
 		mainPanel.add(mineApplet);
@@ -91,20 +91,34 @@ public class MainGUI extends JFrame {
 	}
 	
 	/**
+	 * Called when the server sends a new board to play
+	 * @param board The new board to play
+	 */
+	public void newBoard(Board board) {
+		mineApplet.newBoard(board);
+		mineApplet.setClickable(true);
+		board.setMyapplet(mineApplet);
+		mineApplet.updateImage();
+		mineApplet.repaint();
+	}
+	
+	/**
 	 * Initializes a second player's board
 	 * @param board The underlying board.
 	 */
 	public void initSecondPlayer(Board board) {
 		secondPanel = new JPanel();
 		
-		secondApplet = new MineApplet(board, 25);
+		secondApplet = new MineApplet(board, 25, this);
 		secondApplet.setClickable(false);
 		board.setMyapplet(secondApplet);
 		secondPanel.add(secondApplet);
 		
-		add(secondPanel, BorderLayout.CENTER);
+		add(secondPanel, BorderLayout.EAST);
 		
 		secondApplet.initGraphics();
+		
+		pack();
 	}
 	
 	/**
@@ -123,6 +137,14 @@ public class MainGUI extends JFrame {
 	 */
 	public void connectToPlayer() {
 		clientMain = new ClientMain("127.0.0.1", 8043, this);
+	}
+	
+	/**
+	 * Gets the client that connects to the server
+	 * @return the ClientMain object
+	 */
+	public ClientMain getClient() {
+		return clientMain;
 	}
 	
 	/**

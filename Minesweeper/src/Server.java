@@ -151,10 +151,8 @@ public class Server extends AbstractServer {
 			System.out.println("paired name = "
 					+ user1.getPaired().getUsername());
 			for (User user : users) {
-				System.out.println("user name = " + user.getUsername());
 				// Find the paired user
 				if (user1.getPaired().getUsername().equals(user.getUsername())) {
-					System.out.println("in first if");
 					// Find connection for paired user
 					Thread[] connections = this.getClientConnections();
 					for (int i = 0; i < connections.length; i++) {
@@ -224,9 +222,102 @@ public class Server extends AbstractServer {
 				// add to list of pairs
 				this.sendToAllClients("connecting " + u1.getUsername()
 						+ " and " + u2.getUsername());
+
+				swapBoards(u1, u2);
 			}
 		} else { // send the message to everyone
 			this.sendToAllClients(msg);
+		}
+
+	}
+
+	/**
+	 * Swaps boards between 2 players
+	 * 
+	 * @param user1
+	 * @param user2
+	 */
+	private void swapBoards(User user1, User user2) {
+		System.out.println("boardswap");
+
+		Board board1 = new Board();
+		Board board2 = new Board();
+		board1.setupBoardRandom(15);
+		board2.setupBoardRandom(15);
+
+		ConnectionToClient ctc1 = (ConnectionToClient) this
+				.getClientConnections()[0];
+		ConnectionToClient ctc2 = (ConnectionToClient) this
+				.getClientConnections()[0];
+		boolean founduser1 = false;
+		boolean founduser2 = false;
+		
+				Thread[] connections = this.getClientConnections();
+				for (int i = 0; i < connections.length; i++) {
+					// Check for user1
+					if (((ConnectionToClient) connections[i]).user
+							.getUsername().equals(user1.getUsername())) {
+						System.out.println("connection found");
+						ctc1 = (ConnectionToClient) connections[i];
+						founduser1 = true;
+					}
+					
+					// Check for user2
+					if (((ConnectionToClient) connections[i]).user
+							.getUsername().equals(user2.getUsername())) {
+						System.out.println("connection found");
+						ctc2 = (ConnectionToClient) connections[i];
+						founduser2 = true;
+					}
+
+				}			
+
+		// Send gamedata message to paired user
+		try {
+			// Send boards to user1
+			if (ctc1 != null && founduser1 && founduser2) {
+				System.out.println("attempting to send yourboard to "
+						+ ctc1.toString());
+				String msg = "gamedata yourboard " + board1.getHeight() + " " + board1.getWidth();
+				for(int i = 0; i < board1.getHeight(); i++) {
+					for(int j = 0; j < board1.getWidth(); j++) {
+						msg += " " + board1.getSpace(j, i);
+					}
+				}
+				ctc1.sendToClient(msg);
+				System.out.println("attempting to send board to "
+						+ ctc1.toString());
+				msg = "gamedata board " + board2.getHeight() + " " + board2.getWidth();
+				for(int i = 0; i < board2.getHeight(); i++) {
+					for(int j = 0; j < board2.getWidth(); j++) {
+						msg += " " + board2.getSpace(j, i);
+					}
+				}
+				ctc1.sendToClient(msg);
+			}
+			// Send boards to user2
+			if (ctc2 != null && founduser1 && founduser2) {
+				System.out.println("attempting to send yourboard to "
+						+ ctc2.toString());
+				String msg = "gamedata yourboard " + board2.getHeight() + " " + board2.getWidth();
+				for(int i = 0; i < board2.getHeight(); i++) {
+					for(int j = 0; j < board2.getWidth(); j++) {
+						msg += " " + board2.getSpace(j, i);
+					}
+				}
+				ctc2.sendToClient(msg);
+				System.out.println("attempting to send board to "
+						+ ctc2.toString());
+				msg = "gamedata board " + board1.getHeight() + " " + board1.getWidth();
+				for(int i = 0; i < board1.getHeight(); i++) {
+					for(int j = 0; j < board1.getWidth(); j++) {
+						msg += " " + board1.getSpace(j, i);
+					}
+				}
+				ctc2.sendToClient(msg);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}

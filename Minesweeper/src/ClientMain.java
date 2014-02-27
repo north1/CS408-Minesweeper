@@ -24,13 +24,14 @@ public class ClientMain extends JFrame {
 	private JTextArea chatArea;
 	private JTextField msgArea;
 	private JTextArea userArea;
-	private Client client;
 	private String username;
 	private String password;
 	private String server;
 	private int port;
 	private ClientMain object;
 	private MainGUI mainGUI;
+	
+	public Client client;
 
 	public ClientMain(String server, int port, MainGUI mainGUI) {
 		super("Minesweeper Chat");
@@ -168,6 +169,7 @@ public class ClientMain extends JFrame {
 			if (client != null) {
 				client.closeConnection();
 			}
+			System.out.println("Attempting to connect to : " + server + "\tport: " + port);
 			client = new Client(server, port, this);
 			client.handleMessageFromUI("UsernameLogon " + username + " " + pwd);
 		} catch (IOException e) {
@@ -211,7 +213,7 @@ public class ClientMain extends JFrame {
 			}
 			// Get the type of gamedata
 			token = st.nextToken();
-			if (token.equals("board")) {
+			if (token.equals("board")) { // sending viewable board
 				int height = Integer.parseInt(st.nextToken());
 				int width = Integer.parseInt(st.nextToken());
 				Board board = new Board(height, width);
@@ -222,11 +224,24 @@ public class ClientMain extends JFrame {
 					}
 				}
 				board.setSpaces(spaces);
+				System.out.println("2ndBoard: Width: " + board.getWidth() + "\tHeight: " + board.getHeight());
 				mainGUI.initSecondPlayer(board);
-			} else if (token.equals("click")) {
+			} else if (token.equals("click")) { // sending player 2's click
 				int x = Integer.parseInt(st.nextToken());
 				int y = Integer.parseInt(st.nextToken());
 				mainGUI.secondClick(x, y);
+			} else if(token.equals("yourboard")) { // sending playable board
+				int height = Integer.parseInt(st.nextToken());
+				int width = Integer.parseInt(st.nextToken());
+				Board board = new Board(height, width);
+				int[][] spaces = new int[height][width];
+				for (int i = 0; i < height; i++) {
+					for (int j = 0; j < width; j++) {
+						spaces[i][j] = Integer.parseInt(st.nextToken());
+					}
+				}
+				board.setSpaces(spaces);
+				mainGUI.newBoard(board);
 			}
 		} else {
 			if (chatArea != null) {

@@ -22,12 +22,8 @@ public class Board {
 	 * Default constructor
 	 */
 	public Board() {
-		new Board(9, 9);
-	}
-
-	public Board(int height, int width) {
-		width = 9;
-		height = 9;
+		this.width = 9;
+		this.height = 9;
 		spaces = new int[height][width];
 		hidden = new boolean[height][width];
 		for (int i = 0; i < hidden.length; i++) {
@@ -36,10 +32,24 @@ public class Board {
 			}
 		}
 	}
-	
+
+	public Board(int height, int width) {
+		this.width = width;
+		this.height = height;
+		spaces = new int[height][width];
+		hidden = new boolean[height][width];
+		for (int i = 0; i < hidden.length; i++) {
+			for (int j = 0; j < hidden[i].length; j++) {
+				hidden[i][j] = true;
+			}
+		}
+	}
+
 	/**
 	 * Manually sets the bombs on the board
-	 * @param spaces 2d array of spaces
+	 * 
+	 * @param spaces
+	 *            2d array of spaces
 	 */
 	public void setSpaces(int[][] spaces) {
 		this.spaces = spaces;
@@ -242,7 +252,6 @@ public class Board {
 			setBomb(randomX, randomY);
 		}
 		setAdjNums();
-
 	}
 
 	/**

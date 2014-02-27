@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 
 public class MineApplet extends Applet implements MouseListener {
 
@@ -14,6 +15,8 @@ public class MineApplet extends Applet implements MouseListener {
 	private int scale;
 	private char[][] marks;
 	private boolean clickable;
+	
+	private MainGUI mainGUI;
 
 	private Board board;
 
@@ -23,7 +26,8 @@ public class MineApplet extends Applet implements MouseListener {
 	 * @param board
 	 *            The board to be played on this applet
 	 */
-	public MineApplet(Board board, int scale) {
+	public MineApplet(Board board, int scale, MainGUI mainGUI) {
+		this.mainGUI = mainGUI;
 		newBoard(board);
 		this.scale = scale;
 		init();
@@ -39,7 +43,7 @@ public class MineApplet extends Applet implements MouseListener {
 	 */
 	public void newBoard(Board board) {
 		this.board = board;
-		this.board.setupBoardRandom(15); // TEMPORARY
+//		this.board.setupBoardRandom(15); // TEMPORARY
 		// this.board.unhideAll(); //TEMPORARY
 		marks = new char[board.getHeight()][board.getWidth()];
 	}
@@ -181,6 +185,13 @@ public class MineApplet extends Applet implements MouseListener {
 					updateImage();
 					repaint();
 				}
+				// Send click to server
+				try {
+					mainGUI.getClient().client.sendToServer("gamedata click " + x + " " + y);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
 			} else if (arg0.getButton() == MouseEvent.BUTTON3) {
 				// Right Click. Rotate mark
 				if (marks[y][x] == 'q') {
