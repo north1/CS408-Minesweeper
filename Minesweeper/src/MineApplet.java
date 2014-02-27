@@ -13,7 +13,7 @@ public class MineApplet extends Applet implements MouseListener {
 	private Graphics bufferGraphics;
 	private Image offscreen;
 	private int scale;
-	private char[][] marks;
+	public char[][] marks;
 	private boolean clickable;
 
 	private MainGUI mainGUI;
@@ -187,13 +187,8 @@ public class MineApplet extends Applet implements MouseListener {
 			}
 		} else {
 			// Right Click. Rotate mark
-			if (marks[y][x] == 'q') {
-				marks[y][x] = 'e'; // question -> empty
-			} else if (marks[y][x] == 'f') {
-				marks[y][x] = 'q'; // flag -> question
-			} else {
-				marks[y][x] = 'f'; // empty -> flag
-			}
+			board.rightClick(x,  y);
+			
 			updateImage();
 			repaint();
 		}

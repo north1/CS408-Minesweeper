@@ -10,11 +10,14 @@ public class Board {
 	// 2D Arrays for the grid
 	private int[][] spaces;
 	private boolean[][] hidden;
+	private int numBombs;
+	private int numFlagged;
+	private int numFound;
 
 	private int width;
 	private int height;
 
-	public MineApplet myapplet; // temp for debug
+	private MineApplet myapplet; // temp for debug
 
 	public void setMyapplet(MineApplet app) {
 		myapplet = app;
@@ -77,6 +80,20 @@ public class Board {
 
 	public void rightClick(int x, int y) {
 		// add a flag to this space
+		if (myapplet.marks[y][x] == 'q') {
+			myapplet.marks[y][x] = 'e'; // question -> empty
+		} else if (myapplet.marks[y][x] == 'f') {
+			myapplet.marks[y][x] = 'q'; // flag -> question
+		} else {
+			myapplet.marks[y][x] = 'f'; // empty -> flag
+			numFlagged++;
+			if (getSpace(x, y) == -1) {
+				numFound++;
+			}
+			if ((numFound == numBombs) && (numFlagged == numFound)) {
+				gameWon();
+			}
+		}
 	}
 
 	/**
@@ -252,6 +269,9 @@ public class Board {
 			int randomY = (int) (Math.random() * (spaces.length));
 			setBomb(randomX, randomY);
 		}
+		numBombs = numMines;
+		numFound = 0;
+		numFlagged = 0;
 		setAdjNums();
 	}
 
@@ -260,7 +280,10 @@ public class Board {
 	 */
 	private void gameOver() {
 		JOptionPane.showMessageDialog(new javax.swing.JFrame(),  "Game Over", "You Lost. Play again!", JOptionPane.WARNING_MESSAGE);
-		myapplet.newGame();
+	}
+	
+	private void gameWon() {
+		JOptionPane.showMessageDialog(new javax.swing.JFrame(), "You won!", "You won the game.", JOptionPane.WARNING_MESSAGE);
 	}
 
 	/**
