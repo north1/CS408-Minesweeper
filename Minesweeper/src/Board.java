@@ -3,6 +3,8 @@ import sun.nio.cs.Surrogate.Generator;
 import java.util.Queue;
 import java.util.LinkedList;
 
+import javax.swing.JOptionPane;
+
 public class Board {
 
 	// 2D Arrays for the grid
@@ -66,13 +68,12 @@ public class Board {
 	public void leftClick(int x, int y) {
 		// System.out.println("Clicked: (" + x + ", " + y + ")");
 		hidden[y][x] = false;
-
+		uncoverCluster(x,y);
 		if (getSpace(x, y) == -1) {
 			gameOver();
-		} else {
-			uncoverCluster(x, y);
 		}
 	}
+		
 
 	public void rightClick(int x, int y) {
 		// add a flag to this space
@@ -258,7 +259,8 @@ public class Board {
 	 * Occurs when a bomb is clicked on.
 	 */
 	private void gameOver() {
-		// TODO: failed game condition
+		JOptionPane.showMessageDialog(new javax.swing.JFrame(),  "Game Over", "You Lost. Play again!", JOptionPane.WARNING_MESSAGE);
+		myapplet.newGame();
 	}
 
 	/**

@@ -19,7 +19,6 @@ public class MineApplet extends Applet implements MouseListener {
 	private MainGUI mainGUI;
 
 	private Board board;
-
 	/**
 	 * Primary constructor
 	 * 
@@ -34,6 +33,13 @@ public class MineApplet extends Applet implements MouseListener {
 		repaint();
 		setClickable(false);
 	}
+	
+	/**
+	 * Starts a new 1 player game
+	 */
+	public void newGame() {
+		mainGUI.newGame();
+	}
 
 	/**
 	 * Sets a new board
@@ -46,6 +52,7 @@ public class MineApplet extends Applet implements MouseListener {
 		// this.board.setupBoardRandom(15); // TEMPORARY
 		// this.board.unhideAll(); //TEMPORARY
 		marks = new char[board.getHeight()][board.getWidth()];
+		
 	}
 
 	/**
