@@ -38,7 +38,7 @@
 38 restart button does nothing
 39 can flag all spaces
 40 server thinks you're connected to player when you disconnect
-41 
+41 if you close your gui after a game you can still be connected to a player but not see it
 42 
 43 
 44 
