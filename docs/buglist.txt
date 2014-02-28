@@ -1,0 +1,50 @@
+1 does close - does no terminate
+2 board algo
+3 connect multi people to one person
+4 being able to play after you die
+5 allow name duplicates
+6 new game = wonky
+7 register does not start game
+8 chat message limit
+9 amount of users limit
+10 chat window does not scroll
+11 chat resize hides shit
+12 flag mines after you hit one
+13 board does not scale right
+14 mine counter is wrong
+15 mines get uncovered on accident
+16 randomly gui not visible
+17 server randomly swaps ports
+18 bomb placement not always random
+19 randomly gui runs away from mouse
+20 swap toolbar functions
+21 victory without uncovering all bombs
+22 mix up victory text
+23 randomly 1 click wins
+24 uncover only uncovers clicked space...sometimes
+25 sometimes x button does nothing
+26 sometimes chat no work
+27 chat name does not show up
+28 sometimes you just play against yourself
+29 sometimes you connect to some one and your game exits
+30 game exits if you connect to some one who isnt there
+31 sometimes board is empty
+32 sometimes you can hijack opponents board
+33 sometimes right and left clicks are reversed
+34 sometimes you can't even click the board
+35 swap i and j for baord
+36 if you have 4 mines you get an infinite loop of you win or lose
+37 resize makes disappear (not max or min)
+38 restart button does nothing
+39 can flag all spaces
+40 server thinks you're connected to player when you disconnect
+41 
+42 
+43 
+44 
+45 
+46 
+47 
+48 
+49 
+50 
