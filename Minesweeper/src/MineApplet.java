@@ -145,8 +145,8 @@ public class MineApplet extends Applet implements MouseListener {
 		bufferGraphics.setColor(Color.BLACK);
 		bufferGraphics.fillRect(0, board.getHeight() * scale + 25, board.getWidth() * scale, 50);
 		bufferGraphics.setColor(Color.WHITE);
-		bufferGraphics.drawString("" + secondsPassed, board.getWidth() * scale
-				/ 2, board.getHeight() * scale + 45);
+		bufferGraphics.drawString("" + secondsPassed + "     Bombs Left: " + (board.numBombs - board.numFlagged), board.getWidth() * scale
+				/ 4, board.getHeight() * scale + 45);
 	}
 
 	/**
@@ -272,7 +272,6 @@ public class MineApplet extends Applet implements MouseListener {
 			while (true) {
 				if (System.currentTimeMillis() - 1000 > startTime + 1000
 						* secondsPassed) {
-					System.out.println("startTime: " + startTime);
 					secondsPassed++;
 					updateImage();
 					repaint();

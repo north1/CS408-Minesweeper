@@ -7,9 +7,9 @@ public class Board {
 	// 2D Arrays for the grid
 	private int[][] spaces;
 	private boolean[][] hidden;
-	private int numBombs;
-	private int numFlagged;
-	private int numFound;
+	public int numBombs;
+	public int numFound;
+	public int numFlagged;
 
 	private int width;
 	private int height;
@@ -95,6 +95,7 @@ public class Board {
 			myapplet.marks[y][x] = 'e'; // question -> empty
 		} else if (myapplet.marks[y][x] == 'f') {
 			myapplet.marks[y][x] = 'q'; // flag -> question
+			numFlagged--;
 		} else {
 			myapplet.marks[y][x] = 'f'; // empty -> flag
 			numFlagged++;
