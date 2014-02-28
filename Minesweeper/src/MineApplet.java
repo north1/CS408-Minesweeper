@@ -19,6 +19,7 @@ public class MineApplet extends Applet implements MouseListener {
 	private MainGUI mainGUI;
 
 	private Board board;
+
 	/**
 	 * Primary constructor
 	 * 
@@ -33,7 +34,7 @@ public class MineApplet extends Applet implements MouseListener {
 		repaint();
 		setClickable(false);
 	}
-	
+
 	/**
 	 * Starts a new 1 player game
 	 */
@@ -52,7 +53,7 @@ public class MineApplet extends Applet implements MouseListener {
 		// this.board.setupBoardRandom(15); // TEMPORARY
 		// this.board.unhideAll(); //TEMPORARY
 		marks = new char[board.getHeight()][board.getWidth()];
-		
+
 	}
 
 	/**
@@ -177,21 +178,24 @@ public class MineApplet extends Applet implements MouseListener {
 	 *            Y coordinate
 	 * @param left
 	 *            True for left click, false for right
+	 * @return True if game is over, false if game continues
 	 */
-	public void clicked(int x, int y, boolean left) {
+	public boolean clicked(int x, int y, boolean left) {
+		boolean retval = false;
 		if (left) {
 			if (board.isHidden(x, y)) {
-				board.leftClick(x, y);
+				retval = board.leftClick(x, y);
 				updateImage();
 				repaint();
 			}
 		} else {
 			// Right Click. Rotate mark
-			board.rightClick(x,  y);
-			
+			retval = board.rightClick(x, y);
+
 			updateImage();
 			repaint();
 		}
+		return retval;
 	}
 
 	@Override
@@ -200,8 +204,12 @@ public class MineApplet extends Applet implements MouseListener {
 		int y = arg0.getY() / scale;
 
 		if (isClickable()) {
+			
 			if (arg0.getButton() == MouseEvent.BUTTON1) {
-				clicked(x, y, true);
+				// Bomb is encountered
+				if (clicked(x, y, true)) {
+					mainGUI.endPlayerOne(false);
+				}
 				// Send click to server
 				try {
 					if (mainGUI.getClient() != null) {
@@ -214,9 +222,12 @@ public class MineApplet extends Applet implements MouseListener {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-
+				System.out.println("Cleared: " + percentageCleared());
 			} else if (arg0.getButton() == MouseEvent.BUTTON3) {
-				clicked(x, y, false);
+				// Player has won
+				if(clicked(x, y, false)) {
+					mainGUI.endPlayerOne(true);
+				}
 				try {
 					if (mainGUI.getClient() != null) {
 						if (mainGUI.getClient().isConnectedToPlayer()) {
@@ -231,6 +242,14 @@ public class MineApplet extends Applet implements MouseListener {
 			}
 		}
 
+	}
+	
+	/**
+	 * Gives the percentage of the board that is cleared
+	 * @return The percentage of the board that is cleared
+	 */
+	public int percentageCleared() {
+		return board.percentageCleared();
 	}
 
 	@Override

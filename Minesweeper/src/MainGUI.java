@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
@@ -32,11 +33,21 @@ public class MainGUI extends JFrame {
 	private static MineApplet mineApplet;
 	private static MineApplet secondApplet;
 
+	// Win/Lose conditions
+	public boolean p1Win;
+	public boolean p1Lose;
+	public boolean p2Win;
+	public boolean p2Lose;
+
 	/**
 	 * Default constructor for the GUI
 	 */
 	public MainGUI() {
 		initGUI();
+		p1Win = false;
+		p1Lose = false;
+		p2Win = false;
+		p2Lose = false;
 	}
 
 	/**
@@ -142,7 +153,13 @@ public class MainGUI extends JFrame {
 	 */
 	public void secondClick(int x, int y, boolean left) {
 		if (secondApplet != null) {
-			secondApplet.clicked(x, y, left);
+			if (secondApplet.clicked(x, y, left)) {
+				if (left) {
+					endPlayerTwo(false);
+				} else {
+					endPlayerTwo(true);
+				}
+			}
 		}
 	}
 
@@ -150,7 +167,7 @@ public class MainGUI extends JFrame {
 	 * Opens the dialog to connect to another player
 	 */
 	public void connectToPlayer() {
-		clientMain = new ClientMain("127.0.0.1", 8043, this);
+		clientMain = new ClientMain("moore06.cs.purdue.edu", 8043, this);
 	}
 
 	/**
@@ -163,6 +180,142 @@ public class MainGUI extends JFrame {
 		board.setMyapplet(mineApplet);
 		mineApplet.updateImage();
 		mineApplet.repaint();
+		mineApplet.setClickable(true);
+		p1Win = false;
+		p1Lose = false;
+		p2Win = false;
+		p2Lose = false;
+	}
+
+	/**
+	 * Handles actions when player 1 finishes
+	 * 
+	 * @param win
+	 *            True if player 1 won board, false if they lost
+	 */
+	public void endPlayerOne(boolean win) {
+		// Check to see if there is a second player
+		if (getClient() != null && getClient().isConnectedToPlayer()) {
+			if (win) {
+				p1Win = true;
+				p1Lose = false;
+				if (p2Win) {
+					JOptionPane
+							.showMessageDialog(
+									new javax.swing.JFrame(),
+									"You lost!",
+									"You cleared the board, but your opponent was faster.",
+									JOptionPane.WARNING_MESSAGE);
+				} else if (p2Lose) {
+					JOptionPane
+							.showMessageDialog(
+									new javax.swing.JFrame(),
+									"You won!",
+									"You cleared the board and your opponent failed their board.",
+									JOptionPane.WARNING_MESSAGE);
+				}
+			} else {
+				p1Win = false;
+				p1Lose = true;
+				if (p2Win) {
+					JOptionPane
+							.showMessageDialog(
+									new javax.swing.JFrame(),
+									"You failed to clear the board, and your opponent cleared their board.",
+									"You lost!", JOptionPane.WARNING_MESSAGE);
+				} else if (p2Lose) {
+					if (mineApplet.percentageCleared() > secondApplet
+							.percentageCleared()) {
+						JOptionPane
+								.showMessageDialog(
+										new javax.swing.JFrame(),
+										"You failed to clear the board but you cleared more than your opponent.",
+										"You won!", JOptionPane.WARNING_MESSAGE);
+					} else if (mineApplet.percentageCleared() < secondApplet
+							.percentageCleared()) {
+						JOptionPane
+								.showMessageDialog(
+										new javax.swing.JFrame(),
+										"You failed to clear the board and your opponent cleard more than you",
+										"You lost!",
+										JOptionPane.WARNING_MESSAGE);
+					} else {
+						JOptionPane
+								.showMessageDialog(
+										new javax.swing.JFrame(),
+										"You cleared the same amount of the board as your opponent.",
+										"You tied!",
+										JOptionPane.WARNING_MESSAGE);
+					}
+				}
+			}
+		} else {
+			if (win) {
+				JOptionPane.showMessageDialog(new javax.swing.JFrame(),
+						"You won!", "You won the game.",
+						JOptionPane.WARNING_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(new javax.swing.JFrame(),
+						"Game Over", "You Lost. Play again!",
+						JOptionPane.WARNING_MESSAGE);
+			}
+		}
+	}
+
+	/**
+	 * Handles actions when player 2 finishes
+	 * 
+	 * @param win
+	 *            True if player 2 won board, false if they lost
+	 */
+	public void endPlayerTwo(boolean win) {
+		if (win) { // player 2 cleared the board
+			p2Win = true;
+			p2Lose = false;
+			if (p1Win) {
+				JOptionPane.showMessageDialog(new javax.swing.JFrame(),
+						"You cleared the board faster than your opponent",
+						"You won!", JOptionPane.WARNING_MESSAGE);
+			} else if (p1Lose) {
+				JOptionPane
+						.showMessageDialog(
+								new javax.swing.JFrame(),
+								"You failed to clear the board, and your opponent cleared their board.",
+								"You lost!", JOptionPane.WARNING_MESSAGE);
+			}
+		} else { // player 2 failed to clear board
+			p2Win = false;
+			p2Lose = true;
+			if (p1Win) {
+				JOptionPane
+						.showMessageDialog(
+								new javax.swing.JFrame(),
+								"You cleared the board and your opponent failed to clear their board.",
+								"You won!", JOptionPane.WARNING_MESSAGE);
+			} else if (p1Lose) {
+				if (mineApplet.percentageCleared() > secondApplet
+						.percentageCleared()) {
+					JOptionPane
+							.showMessageDialog(
+									new javax.swing.JFrame(),
+									"You failed to clear the board but you cleared more than your opponent.",
+									"You won!", JOptionPane.WARNING_MESSAGE);
+				} else if (mineApplet.percentageCleared() < secondApplet
+						.percentageCleared()) {
+					JOptionPane
+							.showMessageDialog(
+									new javax.swing.JFrame(),
+									"You failed to clear the board and your opponent cleard more than you",
+									"You lost!", JOptionPane.WARNING_MESSAGE);
+				} else {
+					JOptionPane
+							.showMessageDialog(
+									new javax.swing.JFrame(),
+									"You cleared the same amount of the board as your opponent.",
+									"You tied!", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		}
 	}
 
 	/**

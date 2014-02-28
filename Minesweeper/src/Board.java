@@ -18,6 +18,8 @@ public class Board {
 	private int height;
 
 	private MineApplet myapplet; // temp for debug
+	
+	public boolean gameWon;
 
 	public void setMyapplet(MineApplet app) {
 		myapplet = app;
@@ -36,6 +38,7 @@ public class Board {
 				hidden[i][j] = true;
 			}
 		}
+		gameWon = false;
 	}
 
 	public Board(int height, int width) {
@@ -67,18 +70,26 @@ public class Board {
 	 *            The X coordinate of the clicked space
 	 * @param y
 	 *            The Y coordinate of the clicked space
+	 * @return True if the game was lost, false if game continues
 	 */
-	public void leftClick(int x, int y) {
+	public boolean leftClick(int x, int y) {
 		// System.out.println("Clicked: (" + x + ", " + y + ")");
 		hidden[y][x] = false;
-		uncoverCluster(x,y);
+		uncoverCluster(x, y);
 		if (getSpace(x, y) == -1) {
-			gameOver();
+			myapplet.setClickable(false);
+			return true;
 		}
+		return false;
 	}
-		
 
-	public void rightClick(int x, int y) {
+	/**
+	 * Activates a right click on the board
+	 * @param x X position
+	 * @param y Y position
+	 * @return True if the game was won, false if game continues
+	 */
+	public boolean rightClick(int x, int y) {
 		// add a flag to this space
 		if (myapplet.marks[y][x] == 'q') {
 			myapplet.marks[y][x] = 'e'; // question -> empty
@@ -91,9 +102,11 @@ public class Board {
 				numFound++;
 			}
 			if ((numFound == numBombs) && (numFlagged == numFound)) {
-				gameWon();
+				myapplet.setClickable(false);
+				return true;
 			}
 		}
+		return false;
 	}
 
 	/**
@@ -275,16 +288,6 @@ public class Board {
 		setAdjNums();
 	}
 
-	/**
-	 * Occurs when a bomb is clicked on.
-	 */
-	private void gameOver() {
-		JOptionPane.showMessageDialog(new javax.swing.JFrame(),  "Game Over", "You Lost. Play again!", JOptionPane.WARNING_MESSAGE);
-	}
-	
-	private void gameWon() {
-		JOptionPane.showMessageDialog(new javax.swing.JFrame(), "You won!", "You won the game.", JOptionPane.WARNING_MESSAGE);
-	}
 
 	/**
 	 * Tells if a space is hidden or not
@@ -327,6 +330,22 @@ public class Board {
 	 */
 	public int getWidth() {
 		return width;
+	}
+	
+	/**
+	 * Gives the amount of spaces revealed
+	 * @return The amount of spaces revealed
+	 */
+	public int percentageCleared() {
+		int revealed = 0;
+		for(int i = 0; i < height; i++) {
+			for(int j = 0; j < width; j++) {
+				if(!hidden[i][j] && spaces[i][j] > -1) {
+					revealed++;
+				}
+			}
+		}
+		return (int)(100 * (double)revealed / ((height * width) - numBombs));
 	}
 
 }
