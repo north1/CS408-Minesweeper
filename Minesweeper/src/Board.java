@@ -1,9 +1,6 @@
-import sun.nio.cs.Surrogate.Generator;
-
-import java.util.Queue;
+import java.util.ArrayList;
 import java.util.LinkedList;
-
-import javax.swing.JOptionPane;
+import java.util.Queue;
 
 public class Board {
 
@@ -18,7 +15,7 @@ public class Board {
 	private int height;
 
 	private MineApplet myapplet; // temp for debug
-	
+
 	public boolean gameWon;
 
 	public void setMyapplet(MineApplet app) {
@@ -85,8 +82,11 @@ public class Board {
 
 	/**
 	 * Activates a right click on the board
-	 * @param x X position
-	 * @param y Y position
+	 * 
+	 * @param x
+	 *            X position
+	 * @param y
+	 *            Y position
 	 * @return True if the game was won, false if game continues
 	 */
 	public boolean rightClick(int x, int y) {
@@ -202,70 +202,88 @@ public class Board {
 	 * 
 	 */
 	private void uncoverCluster(int x, int y) {
-		if (spaces[y][x] > 0) {
+		// if this isn't a zero-adjacent space, don't uncover anything extra
+		if (getSpace(x, y) != 0) {
 			return;
 		}
 
-		boolean beenChecked[][] = new boolean[height][width];
-		for (int i = 0; i < beenChecked.length; i++) {
-			for (int j = 0; j < beenChecked[i].length; j++) {
-				beenChecked[i][j] = false;
-			}
-		}
-
+		// create a queue, and add the initially clicked space
 		Queue<int[]> q = new LinkedList<int[]>();
-		int[] point = { x, y };
-		q.add(point);
+		int[] first = { y, x };
+		q.add(first);
+
+		// create a linked list of every space that has been added to the queue
+		// these will never be removed, and will be used to make sure that no
+		// space is added to the queue twice.
+		ArrayList<int[]> checked = new ArrayList<int[]>();
+		checked.add(first);
 
 		while (!q.isEmpty()) {
-			int cur[] = q.poll();
-			int adj[][] = getAdjacent(cur[0], cur[1]);
-			boolean foundAdjacentMine = false;
-			for (int i = 0; i < 8; i++) {
-				try {
-					if (spaces[adj[i][0]][adj[i][1]] == -1) {
-						foundAdjacentMine = true;
-					}
-				} catch (IndexOutOfBoundsException e) { /* ignore */
-				}
-			}
-			if (!foundAdjacentMine) {
-				for (int i = 0; i < 8; i++) {
-					try {
-						hidden[adj[i][0]][adj[i][1]] = false;
-						myapplet.updateImage();
-						myapplet.repaint();
-						if (!beenChecked[adj[i][0]][adj[i][1]]) {
-							q.add(adj[i]);
-							beenChecked[adj[i][0]][adj[i][1]] = true;
-						}
-					} catch (IndexOutOfBoundsException e) { /* ignore */
+			// remove a space from the queue
+			int[] cur = q.poll();
+
+			// get all of the adjacent spaces (some won't be real)
+			int[][] adj = getAdjacent(cur[0], cur[1]);
+
+			for (int i = 0; i < adj.length; i++) {
+
+				// if it's not a real space (outside boundries) don't do
+				// anything
+				if (inBounds(adj[i][0], adj[i][1])) {
+
+					// all of the real adj spaces need to be made visible
+					hidden[adj[i][0]][adj[i][1]] = false;
+					// if the adjacent space is also a zero-adj,
+					// and has NOT been added to the queue before, add it.
+					if (!beenChecked(checked, adj[i])
+							&& spaces[adj[i][0]][adj[i][1]] == 0) {
+						q.add(adj[i]);
+						checked.add(adj[i]);
 					}
 				}
 			}
 		}
+	}
 
+	public boolean beenChecked(ArrayList<int[]> checked, int[] space) {
+
+		for (int i = 0; i < checked.size(); i++) {
+			if (checked.get(i)[0] == space[0] && checked.get(i)[1] == space[1]) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public boolean inBounds(int x, int y) {
+		try {
+			getSpace(x, y);
+			return true;
+		} catch (IndexOutOfBoundsException e) {
+			return false;
+		}
 	}
 
 	private int[][] getAdjacent(int i, int j) {
 
 		int adj[][] = new int[8][2];
-		adj[0][0] = j - 1;
-		adj[0][1] = i - 1;
-		adj[1][0] = j;
-		adj[1][1] = i - 1;
-		adj[2][0] = j + 1;
-		adj[2][1] = i - 1;
-		adj[3][0] = j - 1;
-		adj[3][1] = i;
-		adj[4][0] = j + 1;
-		adj[4][1] = i;
-		adj[5][0] = j - 1;
-		adj[5][1] = i + 1;
-		adj[6][0] = j;
-		adj[6][1] = i + 1;
-		adj[7][0] = j + 1;
-		adj[7][1] = i + 1;
+		adj[0][1] = j - 1;
+		adj[0][0] = i - 1;
+		adj[1][1] = j;
+		adj[1][0] = i - 1;
+		adj[2][1] = j + 1;
+		adj[2][0] = i - 1;
+		adj[3][1] = j - 1;
+		adj[3][0] = i;
+		adj[4][1] = j + 1;
+		adj[4][0] = i;
+		adj[5][1] = j - 1;
+		adj[5][0] = i + 1;
+		adj[6][1] = j;
+		adj[6][0] = i + 1;
+		adj[7][1] = j + 1;
+		adj[7][0] = i + 1;
 
 		return adj;
 	}
@@ -287,7 +305,6 @@ public class Board {
 		numFlagged = 0;
 		setAdjNums();
 	}
-
 
 	/**
 	 * Tells if a space is hidden or not
@@ -331,21 +348,22 @@ public class Board {
 	public int getWidth() {
 		return width;
 	}
-	
+
 	/**
 	 * Gives the amount of spaces revealed
+	 * 
 	 * @return The amount of spaces revealed
 	 */
 	public int percentageCleared() {
 		int revealed = 0;
-		for(int i = 0; i < height; i++) {
-			for(int j = 0; j < width; j++) {
-				if(!hidden[i][j] && spaces[i][j] > -1) {
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				if (!hidden[i][j] && spaces[i][j] > -1) {
 					revealed++;
 				}
 			}
 		}
-		return (int)(100 * (double)revealed / ((height * width) - numBombs));
+		return (int) (100 * (double) revealed / ((height * width) - numBombs));
 	}
 
 }

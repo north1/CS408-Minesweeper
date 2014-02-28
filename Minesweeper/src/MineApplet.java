@@ -20,6 +20,9 @@ public class MineApplet extends Applet implements MouseListener {
 
 	private Board board;
 
+	private long startTime;
+	private int secondsPassed;
+
 	/**
 	 * Primary constructor
 	 * 
@@ -33,6 +36,8 @@ public class MineApplet extends Applet implements MouseListener {
 		init();
 		repaint();
 		setClickable(false);
+		restartTime();
+		
 	}
 
 	/**
@@ -64,7 +69,7 @@ public class MineApplet extends Applet implements MouseListener {
 			return;
 		}
 		setPreferredSize(new Dimension(board.getWidth() * scale + 1,
-				board.getHeight() * scale + 1));
+				board.getHeight() * scale + 50));
 		addMouseListener(this);
 	}
 
@@ -74,7 +79,7 @@ public class MineApplet extends Applet implements MouseListener {
 	public void initGraphics() {
 		try {
 			offscreen = createImage(board.getWidth() * scale, board.getHeight()
-					* scale);
+					* scale + 50);
 			bufferGraphics = offscreen.getGraphics();
 			updateImage();
 			repaint();
@@ -129,12 +134,19 @@ public class MineApplet extends Applet implements MouseListener {
 		}
 		for (int i = 0; i < board.getWidth(); i++) {
 			bufferGraphics.drawLine(i * scale, 0, i * scale, board.getHeight()
-					* scale);
+					* scale - 1);
 		}
 		bufferGraphics.drawLine(0, board.getHeight() * scale - 1,
 				board.getWidth() * scale - 1, board.getHeight() * scale - 1);
 		bufferGraphics.drawLine(board.getWidth() * scale - 1, 0,
 				board.getWidth() * scale - 1, board.getHeight() * scale - 1);
+
+		// Paint the timer
+		bufferGraphics.setColor(Color.BLACK);
+		bufferGraphics.fillRect(0, board.getHeight() * scale + 25, board.getWidth() * scale, 50);
+		bufferGraphics.setColor(Color.WHITE);
+		bufferGraphics.drawString("" + secondsPassed, board.getWidth() * scale
+				/ 2, board.getHeight() * scale + 45);
 	}
 
 	/**
@@ -204,7 +216,7 @@ public class MineApplet extends Applet implements MouseListener {
 		int y = arg0.getY() / scale;
 
 		if (isClickable()) {
-			
+
 			if (arg0.getButton() == MouseEvent.BUTTON1) {
 				// Bomb is encountered
 				if (clicked(x, y, true)) {
@@ -222,10 +234,9 @@ public class MineApplet extends Applet implements MouseListener {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				System.out.println("Cleared: " + percentageCleared());
 			} else if (arg0.getButton() == MouseEvent.BUTTON3) {
 				// Player has won
-				if(clicked(x, y, false)) {
+				if (clicked(x, y, false)) {
 					mainGUI.endPlayerOne(true);
 				}
 				try {
@@ -243,13 +254,40 @@ public class MineApplet extends Applet implements MouseListener {
 		}
 
 	}
-	
+
 	/**
 	 * Gives the percentage of the board that is cleared
+	 * 
 	 * @return The percentage of the board that is cleared
 	 */
 	public int percentageCleared() {
 		return board.percentageCleared();
+	}
+
+	/**
+	 * Thread for keeping the time that the game has been played
+	 */
+	public Runnable timeThread = new Runnable() {
+		public void run() {
+			while (true) {
+				if (System.currentTimeMillis() - 1000 > startTime + 1000
+						* secondsPassed) {
+					System.out.println("startTime: " + startTime);
+					secondsPassed++;
+					updateImage();
+					repaint();
+				}
+			}
+		}
+	};
+
+	public void restartTime() {
+		startTime = System.currentTimeMillis();
+		secondsPassed = 0;
+	}
+	
+	public int getSecondsPassed() { 
+		return secondsPassed;
 	}
 
 	@Override
