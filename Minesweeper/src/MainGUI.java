@@ -3,7 +3,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -168,7 +167,7 @@ public class MainGUI extends JFrame {
 	 * Opens the dialog to connect to another player
 	 */
 	public void connectToPlayer() {
-		clientMain = new ClientMain("moore06.cs.purdue.edu", 8043, this);
+		clientMain = new ClientMain("127.0.0.1", 8043, this);
 	}
 
 	/**
