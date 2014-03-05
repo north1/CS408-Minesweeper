@@ -37,7 +37,7 @@ public class MineApplet extends Applet implements MouseListener {
 		repaint();
 		setClickable(false);
 		restartTime();
-		
+
 	}
 
 	/**
@@ -143,9 +143,11 @@ public class MineApplet extends Applet implements MouseListener {
 
 		// Paint the timer
 		bufferGraphics.setColor(Color.BLACK);
-		bufferGraphics.fillRect(0, board.getHeight() * scale + 25, board.getWidth() * scale, 50);
+		bufferGraphics.fillRect(0, board.getHeight() * scale + 25,
+				board.getWidth() * scale, 50);
 		bufferGraphics.setColor(Color.WHITE);
-		bufferGraphics.drawString("" + secondsPassed + "     Bombs Left: " + (board.numBombs - board.numFlagged), board.getWidth() * scale
+		bufferGraphics.drawString("Bombs Left: "
+				+ (board.numBombs - board.numFlagged), board.getWidth() * scale
 				/ 4, board.getHeight() * scale + 45);
 	}
 
@@ -284,8 +286,8 @@ public class MineApplet extends Applet implements MouseListener {
 		startTime = System.currentTimeMillis();
 		secondsPassed = 0;
 	}
-	
-	public int getSecondsPassed() { 
+
+	public int getSecondsPassed() {
 		return secondsPassed;
 	}
 

@@ -23,7 +23,6 @@ public class MainGUI extends JFrame {
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private JMenuItem newGame;
-	private JMenuItem createBoard;
 	private JMenuItem connectToPlayer;
 
 	private ClientMain clientMain;
@@ -59,11 +58,8 @@ public class MainGUI extends JFrame {
 		menuBar = new JMenuBar();
 		menu = new JMenu("Menu");
 		newGame = new JMenuItem("New Game");
-		createBoard = new JMenuItem("Create Board");
-		createBoard.setEnabled(false);
 		connectToPlayer = new JMenuItem("Connect to Player");
 		menu.add(newGame);
-		menu.add(createBoard);
 		menu.add(connectToPlayer);
 		menuBar.add(menu);
 		connectToPlayer.addActionListener(new ActionListener() {
