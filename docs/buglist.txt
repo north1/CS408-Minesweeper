@@ -39,7 +39,7 @@
 39 can flag all spaces
 40 server thinks you're connected to player when you disconnect
 41 if you close your gui after a game you can still be connected to a player but not see it
-42 
+42 New Game doesn't disconnect players, boards become out of sync
 43 
 44 
 45 
