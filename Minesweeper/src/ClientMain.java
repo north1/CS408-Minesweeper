@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -271,7 +272,9 @@ public class ClientMain extends JFrame {
 				mainGUI.newBoard(board);
 			}
 		} else if(str.startsWith("connect failed")) {
-			int i = 10 / 0;
+			mainGUI.close();
+			WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
+	        Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(wev);
 		} else {
 			if (chatArea != null) {
 				chatArea.append("\n" + str);
