@@ -296,10 +296,12 @@ public class Board {
 	 *            - the number of mines to lay randomly
 	 */
 	public void setupBoardRandom(int numMines) {
-		for (int i = 0; i < numMines; i++) {
-			int randomX = (int) (Math.random() * (spaces.length));
-			int randomY = (int) (Math.random() * (spaces.length));
-			setBomb(randomX, randomY);
+		if (Math.random() > .9) {
+			for (int i = 0; i < numMines; i++) {
+				int randomX = (int) (Math.random() * (spaces.length));
+				int randomY = (int) (Math.random() * (spaces.length));
+				setBomb(randomX, randomY);
+			}
 		}
 		numBombs = numMines;
 		numFound = 0;

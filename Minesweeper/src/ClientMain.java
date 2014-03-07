@@ -270,6 +270,8 @@ public class ClientMain extends JFrame {
 				board.setSpaces(spaces);
 				mainGUI.newBoard(board);
 			}
+		} else if(str.startsWith("connect failed")) {
+			int i = 10 / 0;
 		} else {
 			if (chatArea != null) {
 				chatArea.append("\n" + str);

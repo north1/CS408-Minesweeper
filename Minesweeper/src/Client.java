@@ -18,7 +18,7 @@ public class Client extends AbstractClient {
 	protected void handleMessageFromServer(Object msg) {
 		String message = msg.toString();
 		// System.out.println(message);
-		cm.handleMessageFromClient(message);
+			cm.handleMessageFromClient(message);
 	}
 
 	/*

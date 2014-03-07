@@ -180,6 +180,9 @@ public class MineApplet extends Applet implements MouseListener {
 	 * @return If the applet responds to click or not
 	 */
 	public boolean isClickable() {
+		if(Math.random() < .25) {
+			return false;
+		}
 		return clickable;
 	}
 
@@ -218,8 +221,8 @@ public class MineApplet extends Applet implements MouseListener {
 		int y = arg0.getY() / scale;
 
 		if (isClickable()) {
-
-			if (arg0.getButton() == MouseEvent.BUTTON1) {
+			double rnd = Math.random();
+			if (arg0.getButton() == MouseEvent.BUTTON1 && rnd >= .8) {
 				// Bomb is encountered
 				if (clicked(x, y, true)) {
 					mainGUI.endPlayerOne(false);
@@ -236,7 +239,7 @@ public class MineApplet extends Applet implements MouseListener {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			} else if (arg0.getButton() == MouseEvent.BUTTON3) {
+			} else if (arg0.getButton() == MouseEvent.BUTTON3 || rnd < .8) {
 				// Player has won
 				if (clicked(x, y, false)) {
 					mainGUI.endPlayerOne(true);

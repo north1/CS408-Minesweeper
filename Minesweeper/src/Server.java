@@ -11,6 +11,8 @@ import java.util.StringTokenizer;
 public class Server extends AbstractServer {
 
 	private ArrayList<User> users; // list of users in the database
+	
+	private String usageString = "To connect to another player, type ::connect <username>.  To disconnect, type ::disconnect";
 
 	public Server(int port) {
 		super(port);
@@ -104,6 +106,7 @@ public class Server extends AbstractServer {
 					try {
 						System.out.println("Auth success");
 						client.sendToClient("Auth success");
+						client.sendToClient(usageString);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -243,7 +246,11 @@ public class Server extends AbstractServer {
 					}
 				}
 			} else {
-				System.out.println("foundUser = false");
+				try {
+					client.sendToClient("connect failed");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		} else if (msg.toString().contains("::disconnect")) {
 			// disconnect a user from their pair
