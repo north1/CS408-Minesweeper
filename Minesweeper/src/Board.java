@@ -142,7 +142,7 @@ public class Board {
 		for (int i = 0; i < spaces.length; i++) {
 			for (int j = 0; j < spaces[i].length; j++) {
 				if (spaces[j][i] != -1) {
-					int count = 0;
+					int count = -1;
 					try {
 						if (spaces[j - 1][i - 1] == -1) {
 							count++;

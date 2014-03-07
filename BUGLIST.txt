@@ -1,4 +1,0 @@
-1: sometimes when randomly generating a board, the number of mines placed is less than expected. I'm not even sure why frankly but I didn't look very hard.
-2: can someone fix the adjacent bomb number positioning? they're all shifted a row too high and when I try to manually shift their position they just disapear
-3: process isn't ending when you hit close. this one is kinda subtle, because the frame does disapear.
-4: 

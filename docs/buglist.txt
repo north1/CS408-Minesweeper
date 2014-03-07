@@ -1,4 +1,4 @@
-1 does close - does no terminate
+* 1 does close - does no terminate
 2 board algo
 3 connect multi people to one person
 4 being able to play after you die
@@ -11,8 +11,8 @@
 11 chat resize hides shit
 12 flag mines after you hit one
 13 board does not scale right
-14 mine counter is wrong
-15 mines get uncovered on accident
+* 14 mine counter is wrong
+* 15 mines get uncovered on accident
 16 randomly gui not visible
 17 server randomly swaps ports
 18 bomb placement not always random
@@ -35,11 +35,11 @@
 35 swap i and j for baord
 36 if you have 4 mines you get an infinite loop of you win or lose
 37 resize makes disappear (not max or min)
-38 restart button does nothing
-39 can flag all spaces
+* 38 restart button does nothing
+* 39 can flag all spaces
 40 server thinks you're connected to player when you disconnect
 41 if you close your gui after a game you can still be connected to a player but not see it
-42 New Game doesn't disconnect players, boards become out of sync
+* 42 New Game doesn't disconnect players, boards become out of sync
 43 
 44 
 45 

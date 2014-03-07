@@ -69,7 +69,7 @@ public class MainGUI extends JFrame {
 		});
 		newGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				newGame();
+				//newGame();
 			}
 		});
 
