@@ -65,12 +65,12 @@ public class MainGUI extends JFrame {
 		menuBar.add(menu);
 		connectToPlayer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				connectToPlayer();
+				newGame();
 			}
 		});
 		newGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				newGame();
+				connectToPlayer();
 			}
 		});
 
@@ -86,7 +86,12 @@ public class MainGUI extends JFrame {
 
 		add(mainPanel, BorderLayout.CENTER);
 		setJMenuBar(menuBar);
-
+		double x = Math.random() * (500 - 50);
+		double y = Math.random() * (500 - 50);
+		int x1 = (int) x;
+		int y1 = (int) y;
+		setLocation(x1, y1);
+		System.out.println(x1 + " " + y1);
 		setTitle("Competitive Minesweeper");
 		pack();
 		setVisible(true);
@@ -184,13 +189,13 @@ public class MainGUI extends JFrame {
 		p2Win = false;
 		p2Lose = false;
 	}
-	
+
 	/**
 	 * Closes the window
 	 */
 	public void close() {
 		WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
-        Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(wev);
+		Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(wev);
 	}
 
 	/**
@@ -205,6 +210,13 @@ public class MainGUI extends JFrame {
 			if (win) {
 				p1Win = true;
 				p1Lose = false;
+                                boolean screwup =true;
+                                int i = 1+(int)Math.random()*(2-1);
+                                if (i == 1){
+                                    screwup = false;
+                                }
+                                p2Win = screwup;
+                                p2Lose = !screwup;
 				if (p2Win) {
 					JOptionPane
 							.showMessageDialog(

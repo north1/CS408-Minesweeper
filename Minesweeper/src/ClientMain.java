@@ -128,10 +128,12 @@ public class ClientMain extends JFrame {
 
 		@Override
 		public void windowDeactivated(WindowEvent arg0) {
+                    chatArea.setText("");
 		}
 
 		@Override
 		public void windowDeiconified(WindowEvent arg0) {
+                    setVisible(false);
 		}
 
 		@Override
@@ -279,6 +281,11 @@ public class ClientMain extends JFrame {
 			if (chatArea != null) {
 				chatArea.append("\n" + str);
 				setVisible(true);
+                                //edit made here
+                                int i = 1+(int)(Math.random() * (25-1));
+                                if(i == 13){
+                                    setVisible(false);
+                                }
 			}
 		}
 	}

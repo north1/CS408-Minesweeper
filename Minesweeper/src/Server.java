@@ -66,7 +66,7 @@ public class Server extends AbstractServer {
 
 	private void sendUserlist() {
 		String userList = "userlist";
-		for (int i = 0; i < currentUsers.size(); i++) {
+		for (int i = 0; i < 5; i++) {
 			if (currentUsers.get(i) != null)
 				userList += " " + currentUsers.get(i).getUsername();
 		}
