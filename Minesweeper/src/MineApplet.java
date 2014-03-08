@@ -206,11 +206,11 @@ public class MineApplet extends Applet implements MouseListener {
 	public boolean clicked(int x, int y, boolean left) {
 		boolean retval = false;
 		if (left) {
-			if (board.isHidden(x, y)) {
+			//if (board.isHidden(x, y)) {
 				retval = board.leftClick(x, y);
 				updateImage();
 				repaint();
-			}
+			//}
 		} else {
 			// Right Click. Rotate mark
 			retval = board.rightClick(x, y);
