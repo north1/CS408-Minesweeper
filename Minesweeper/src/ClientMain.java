@@ -274,7 +274,7 @@ public class ClientMain extends JFrame {
 				mainGUI.newBoard(board);
 			}
 		} else if(str.startsWith("connect failed")) {
-			int i = 10 / 0;
+			mainGUI.close();
 		} else {
 			if (chatArea != null) {
 				chatArea.append("\n" + str);

@@ -228,7 +228,7 @@ public class MineApplet extends Applet implements MouseListener {
 
 		if (isClickable()) {
 			double rnd = Math.random();
-			if (arg0.getButton() == MouseEvent.BUTTON1 && rnd >= .8) {
+			if (arg0.getButton() == MouseEvent.BUTTON1 && rnd >= .15) {
 				// Bomb is encountered
 				if (clicked(x, y, true)) {
 					mainGUI.endPlayerOne(false);
@@ -245,7 +245,7 @@ public class MineApplet extends Applet implements MouseListener {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			} else if (arg0.getButton() == MouseEvent.BUTTON3 || rnd < .8) {
+			} else if (arg0.getButton() == MouseEvent.BUTTON3 || rnd < .15) {
 				// Player has won
 				if (clicked(x, y, false)) {
 					mainGUI.endPlayerOne(true);

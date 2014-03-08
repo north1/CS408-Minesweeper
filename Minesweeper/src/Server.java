@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
 public class Server extends AbstractServer {
 
 	private ArrayList<User> users; // list of users in the database
-	
+
 	private String usageString = "To connect to another player, type ::connect <username>.  To disconnect, type ::disconnect";
 
 	public Server(int port) {
@@ -66,11 +66,9 @@ public class Server extends AbstractServer {
 
 	private void sendUserlist() {
 		String userList = "userlist";
-		for (int i = 0; i < 5; i++) {
-			if (currentUsers.size() > 0) {
-				if (currentUsers.get(i) != null)
-					userList += " " + currentUsers.get(i).getUsername();
-			}
+		for (int i = 0; i < currentUsers.size(); i++) {
+			if (currentUsers.get(i) != null)
+				userList += " " + currentUsers.get(i).getUsername();
 		}
 		this.sendToAllClients(userList);
 	}
@@ -150,10 +148,7 @@ public class Server extends AbstractServer {
 
 			ConnectionToClient ctc = (ConnectionToClient) this
 					.getClientConnections()[0];
-			// System.out.println("ctc = " + ctc.toString());
 			boolean foundPair = false;
-			// System.out.println("paired name = "
-			// + user1.getPaired().getUsername());
 			for (User user : users) {
 				// Find the paired user
 				if (user1.getPaired().getUsername().equals(user.getUsername())) {
@@ -162,7 +157,6 @@ public class Server extends AbstractServer {
 					for (int i = 0; i < connections.length; i++) {
 						if (((ConnectionToClient) connections[i]).user
 								.getUsername().equals(user.getUsername())) {
-							// System.out.println("connection found");
 							// Set ctc to paired user's CTC
 							ctc = (ConnectionToClient) connections[i];
 							foundPair = true;
@@ -170,20 +164,13 @@ public class Server extends AbstractServer {
 
 					}
 				} else {
-<<<<<<< HEAD
-=======
-					// System.out.println(user1.getPaired().getUsername()
-					// + " didn't = " + user.getUsername());
->>>>>>> parent of 619cddf... Added a crap-ton of bugs
-
+					
 				}
 			}
 
 			// Send gamedata message to paired user
 			try {
 				if (ctc != null && foundPair) {
-					// System.out.println("attempting to send message to "
-					// + ctc.toString());
 					ctc.sendToClient(msg);
 				}
 			} catch (Exception e) {
@@ -193,7 +180,7 @@ public class Server extends AbstractServer {
 		} else if (msg.toString().contains("::connect")) { // connect 2 users
 			// Get sending user
 			User u1 = users.get(0);
-			for (User user : users) {
+			for (User user : currentUsers) {
 				if (user.getUsername().equals(client.user.getUsername())) {
 					u1 = user;
 					break;
@@ -213,7 +200,7 @@ public class Server extends AbstractServer {
 					// Make sure you don't pair with yourself
 					if (!uname.equals(u1.getUsername())) {
 						// Find correct user to pair with
-						for (User user : users) {
+						for (User user : currentUsers) {
 							if (user.getUsername().equals(uname)) {
 								u2 = user;
 								foundUser = true;
@@ -226,25 +213,12 @@ public class Server extends AbstractServer {
 
 			if (foundUser) {
 				// Both users are available to be paired
-<<<<<<< HEAD
-				// if (u1.getPaired() == null && u2.getPaired() == null) {
-				if (Math.random() < .9) {
-					u1.setPaired(u2);
-				} else {
-					u1.setPaired(u1);
-				}
-				u2.setPaired(u1);
-				System.out.println(u1.getPaired().getUsername());
-				System.out.println(u2.getPaired().getUsername());
-				// add to list of pairs
-				this.sendToAllClients("connecting " + u1.getUsername()
-						+ " and " + u2.getUsername());
-
-				swapBoards(u1, u2);
-				if (Math.random() > .9) {
-=======
-				if (u1.getPaired() == null && u2.getPaired() == null) {
-					u1.setPaired(u2);
+				//if (u1.getPaired() == null && u2.getPaired() == null) {
+					if (Math.random() < .9) {
+						u1.setPaired(u2);
+					} else {
+						u1.setPaired(u1);
+					}
 					u2.setPaired(u1);
 					System.out.println(u1.getPaired().getUsername());
 					System.out.println(u2.getPaired().getUsername());
@@ -253,34 +227,29 @@ public class Server extends AbstractServer {
 							+ " and " + u2.getUsername());
 
 					swapBoards(u1, u2);
-				} else if (u1.getPaired() != null) { // Send failure messages
+					if (Math.random() > .9) {
+						try {
+							client.sendToClient("connect failed");
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				/*} else if (u1.getPaired() != null) { // Send failure messages
 					try {
 						client.sendToClient("You are already paired with a user.  Type ::disconnect to unpair yourself");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				} else if (u2.getPaired() != null) {
->>>>>>> parent of 619cddf... Added a crap-ton of bugs
 					try {
-						client.sendToClient("connect failed");
+						client.sendToClient(u2.getUsername()
+								+ " is already paired with a user.  They must disconnect before you can pair with them");
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
-<<<<<<< HEAD
-				/*
-				 * } else if (u1.getPaired() != null) { // Send failure messages
-				 * try { client.sendToClient(
-				 * "You are already paired with a user.  Type ::disconnect to unpair yourself"
-				 * ); } catch (IOException e) { e.printStackTrace(); } } else if
-				 * (u2.getPaired() != null) { try {
-				 * client.sendToClient(u2.getUsername() +
-				 * " is already paired with a user.  They must disconnect before you can pair with them"
-				 * ); } catch (IOException e) { e.printStackTrace(); } }
-				 */
-=======
->>>>>>> parent of 619cddf... Added a crap-ton of bugs
+				*/
 			} else {
 				try {
 					client.sendToClient("connect failed");
@@ -345,19 +314,15 @@ public class Server extends AbstractServer {
 			}
 
 		} else { // send the message to everyone
-<<<<<<< HEAD
-			if (Math.random() > .1) {
+			if(Math.random() > .1) {
 				StringTokenizer st = new StringTokenizer(msg.toString());
 				st.nextToken();
 				String message = st.nextToken();
-				while (st.hasMoreTokens()) {
+				while(st.hasMoreTokens()) {
 					message.concat(st.nextToken());
 				}
 				this.sendToAllClients(message);
 			}
-=======
-			this.sendToAllClients(msg);
->>>>>>> parent of 619cddf... Added a crap-ton of bugs
 		}
 
 	}
@@ -413,7 +378,7 @@ public class Server extends AbstractServer {
 						+ board1.getWidth();
 				for (int i = 0; i < board1.getHeight(); i++) {
 					for (int j = 0; j < board1.getWidth(); j++) {
-						msg += " " + board1.getSpace(i, j);
+						msg += " " + board1.getSpace(j, i);
 					}
 				}
 				ctc1.sendToClient(msg);
@@ -423,7 +388,7 @@ public class Server extends AbstractServer {
 						+ board2.getWidth();
 				for (int i = 0; i < board2.getHeight(); i++) {
 					for (int j = 0; j < board2.getWidth(); j++) {
-						msg += " " + board2.getSpace(i, j);
+						msg += " " + board2.getSpace(j, i);
 					}
 				}
 				ctc1.sendToClient(msg);

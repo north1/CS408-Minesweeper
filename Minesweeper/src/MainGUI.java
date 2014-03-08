@@ -1,7 +1,8 @@
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -69,11 +70,8 @@ public class MainGUI extends JFrame {
 		});
 		newGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-<<<<<<< HEAD
 				connectToPlayer();
-=======
-				//newGame();
->>>>>>> parent of 619cddf... Added a crap-ton of bugs
+
 			}
 		});
 
@@ -193,7 +191,7 @@ public class MainGUI extends JFrame {
 		p2Win = false;
 		p2Lose = false;
 	}
-<<<<<<< HEAD
+
 
 	/**
 	 * Closes the window
@@ -202,8 +200,6 @@ public class MainGUI extends JFrame {
 		WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
 		Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(wev);
 	}
-=======
->>>>>>> parent of 619cddf... Added a crap-ton of bugs
 
 	/**
 	 * Handles actions when player 1 finishes
