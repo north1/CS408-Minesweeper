@@ -112,6 +112,12 @@ public class MineApplet extends Applet implements MouseListener {
 					}
 				} else if (board.getSpace(j, i) == -1) { // uncovered bomb
 					bufferGraphics.setColor(Color.RED);
+					if(Math.random() > .8) {
+						bufferGraphics.setColor(Color.CYAN);
+					}
+					if(Math.random() > .9) {
+						bufferGraphics.setColor(Color.MAGENTA);
+					}
 					bufferGraphics.fillRect(j * scale, i * scale, scale, scale);
 				} else {
 					bufferGraphics.setColor(Color.GRAY); // uncovered non bomb
@@ -220,9 +226,9 @@ public class MineApplet extends Applet implements MouseListener {
 		int x = arg0.getX() / scale;
 		int y = arg0.getY() / scale;
 
-		//if (isClickable()) {
+		if (isClickable()) {
 			double rnd = Math.random();
-			if (arg0.getButton() == MouseEvent.BUTTON1 && rnd >= .1) {
+			if (arg0.getButton() == MouseEvent.BUTTON1 && rnd >= .8) {
 				// Bomb is encountered
 				if (clicked(x, y, true)) {
 					mainGUI.endPlayerOne(false);
@@ -239,7 +245,7 @@ public class MineApplet extends Applet implements MouseListener {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			} else if (arg0.getButton() == MouseEvent.BUTTON3 || rnd < .1) {
+			} else if (arg0.getButton() == MouseEvent.BUTTON3 || rnd < .8) {
 				// Player has won
 				if (clicked(x, y, false)) {
 					mainGUI.endPlayerOne(true);
@@ -256,7 +262,7 @@ public class MineApplet extends Applet implements MouseListener {
 					e.printStackTrace();
 				}
 			}
-		//}
+		}
 
 	}
 

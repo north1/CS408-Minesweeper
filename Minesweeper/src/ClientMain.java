@@ -1,6 +1,5 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -193,6 +192,7 @@ public class ClientMain extends JFrame {
 			System.out.println("Attempting to connect to : " + server + "\tport: " + port);
 			client = new Client(server, port, this);
 			client.handleMessageFromUI("UsernameLogon " + username + " " + pwd);
+			System.out.println("connected: " + client.isConnected());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -274,9 +274,7 @@ public class ClientMain extends JFrame {
 				mainGUI.newBoard(board);
 			}
 		} else if(str.startsWith("connect failed")) {
-			mainGUI.close();
-			WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
-	        Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(wev);
+			int i = 10 / 0;
 		} else {
 			if (chatArea != null) {
 				chatArea.append("\n" + str);
