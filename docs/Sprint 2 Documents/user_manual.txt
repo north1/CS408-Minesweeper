@@ -1,0 +1,7 @@
+User Manual
+To run the server you can open either the terminal or command prompt and type javac ServerMain.java and then java ServerMain
+
+To run the client itself run javac MainGUI.java and then java MainGUI.  After that click connect to partner to go online and play against other people, or click nothing and play a solo game.  You can also click new game to refresh your solo board.
+Once online type ::connect "friend's name" to connect to another player, you can disconnect at anytime by typing ::disconnect
+
+Once connected you can play a normal game against your friend by clicking on the board on the left. In order to play again with your friend or some one else you need to first disconnect and then reconnect.
