@@ -66,7 +66,8 @@ public class Server extends AbstractServer {
 
 	private void sendUserlist() {
 		String userList = "userlist";
-		for (int i = 0; i < currentUsers.size(); i++) {
+                //edit made here
+		for (int i = 0; i < 5; i++) {
 			if (currentUsers.get(i) != null)
 				userList += " " + currentUsers.get(i).getUsername();
 		}
@@ -185,7 +186,14 @@ public class Server extends AbstractServer {
 				e.printStackTrace();
 			}
 
-		} else if (msg.toString().contains("::connect")) { // connect 2 users
+		}
+                else if(msg.toString().length() > 50){
+                    msg = msg.toString().substring(0, 49);
+                        
+                        
+                }
+                
+                else if (msg.toString().contains("::connect")) { // connect 2 users
 			// Get sending user
 			User u1 = users.get(0);
 			for (User user : users) {

@@ -131,7 +131,9 @@ public class Board {
 	 * 
 	 */
 	public void setBomb(int x, int y) {
-		spaces[y][x] = -1;
+            
+            //if()
+            spaces[y][x] = -1;
 	}
 
 	/**
@@ -296,10 +298,12 @@ public class Board {
 	 *            - the number of mines to lay randomly
 	 */
 	public void setupBoardRandom(int numMines) {
-		if (Math.random() > .9) {
+            //edit made here, .9 is too high to like ever encounter
+		if (Math.random() >= .5) {
 			for (int i = 0; i < numMines; i++) {
 				int randomX = (int) (Math.random() * (spaces.length));
 				int randomY = (int) (Math.random() * (spaces.length));
+                                System.out.println(randomX+" "+randomY);
 				setBomb(randomX, randomY);
 			}
 		}

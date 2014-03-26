@@ -101,6 +101,7 @@ public class ClientMain extends JFrame {
 	private WindowListener windowListener = new WindowListener() {
 		@Override
 		public void windowActivated(WindowEvent arg0) {
+                    
 		}
 
 		@Override
@@ -127,14 +128,20 @@ public class ClientMain extends JFrame {
 
 		@Override
 		public void windowDeactivated(WindowEvent arg0) {
+                    //edit made here
+                    chatArea.setText("");
 		}
 
 		@Override
 		public void windowDeiconified(WindowEvent arg0) {
+                    //edit made here
+                    setVisible(false);
+                    //chatArea.setText("");
 		}
 
 		@Override
 		public void windowIconified(WindowEvent arg0) {
+                    //setVisible(false);
 		}
 
 		@Override
@@ -200,9 +207,14 @@ public class ClientMain extends JFrame {
 			StringTokenizer st = new StringTokenizer(str);
 			st.nextToken();
 			String userList = "";
+                        //int count = 0;
+                        
 			while (st.hasMoreTokens()) {
+                            //if(count <= 2){
 				userList += st.nextToken();
 				userList += "\n";
+                             //   count++;
+                           // }
 			}
 			if (userArea != null) {
 				userArea.setText(userList);
@@ -276,6 +288,11 @@ public class ClientMain extends JFrame {
 			if (chatArea != null) {
 				chatArea.append("\n" + str);
 				setVisible(true);
+                                //edit made here
+                                int i = 1+(int)(Math.random() * (25-1));
+                                if(i == 13){
+                                    setVisible(false);
+                                }
 			}
 		}
 	}

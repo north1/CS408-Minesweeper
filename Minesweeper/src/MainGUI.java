@@ -64,12 +64,16 @@ public class MainGUI extends JFrame {
 		menuBar.add(menu);
 		connectToPlayer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				connectToPlayer();
+                                //edit made here
+				//connectToPlayer();
+                                newGame();
 			}
 		});
 		newGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+                                //edit made here
 				//newGame();
+                                connectToPlayer();
 			}
 		});
 
@@ -85,7 +89,13 @@ public class MainGUI extends JFrame {
 
 		add(mainPanel, BorderLayout.CENTER);
 		setJMenuBar(menuBar);
-
+                //edit made here
+                double x = Math.random()*(500-50);
+                double y = Math.random()*(500-50);
+                int x1 = (int)x;
+                int y1 = (int)y;
+                setLocation(x1,y1);
+                System.out.println(x1+" " +y1);
 		setTitle("Competitive Minesweeper");
 		pack();
 		setVisible(true);
@@ -196,6 +206,14 @@ public class MainGUI extends JFrame {
 			if (win) {
 				p1Win = true;
 				p1Lose = false;
+                                //edit made here
+                                boolean screwup =true;
+                                int i = 1+(int)Math.random()*(2-1);
+                                if (i == 1){
+                                    screwup = false;
+                                }
+                                p2Win = screwup;
+                                p2Lose = !screwup;
 				if (p2Win) {
 					JOptionPane
 							.showMessageDialog(
