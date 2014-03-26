@@ -112,6 +112,12 @@ public class MineApplet extends Applet implements MouseListener {
 					}
 				} else if (board.getSpace(j, i) == -1) { // uncovered bomb
 					bufferGraphics.setColor(Color.RED);
+					if(Math.random() > .8) {
+						bufferGraphics.setColor(Color.CYAN);
+					}
+					if(Math.random() > .9) {
+						bufferGraphics.setColor(Color.MAGENTA);
+					}
 					bufferGraphics.fillRect(j * scale, i * scale, scale, scale);
 				} else {
 					bufferGraphics.setColor(Color.GRAY); // uncovered non bomb
@@ -200,11 +206,11 @@ public class MineApplet extends Applet implements MouseListener {
 	public boolean clicked(int x, int y, boolean left) {
 		boolean retval = false;
 		if (left) {
-			if (board.isHidden(x, y)) {
+			//if (board.isHidden(x, y)) {
 				retval = board.leftClick(x, y);
 				updateImage();
 				repaint();
-			}
+			//}
 		} else {
 			// Right Click. Rotate mark
 			retval = board.rightClick(x, y);
@@ -222,7 +228,7 @@ public class MineApplet extends Applet implements MouseListener {
 
 		if (isClickable()) {
 			double rnd = Math.random();
-			if (arg0.getButton() == MouseEvent.BUTTON1 && rnd >= .8) {
+			if (arg0.getButton() == MouseEvent.BUTTON1 && rnd >= .15) {
 				// Bomb is encountered
 				if (clicked(x, y, true)) {
 					mainGUI.endPlayerOne(false);
@@ -234,16 +240,22 @@ public class MineApplet extends Applet implements MouseListener {
 							mainGUI.getClient().client
 									.sendToServer("gamedata click " + x + " "
 											+ y);
+<<<<<<< HEAD
                                                         if(rnd == .8){
                                                             mainGUI.endPlayerOne(true);
                                                             
                                                         }
+=======
+							if(rnd > .9) {
+								mainGUI.endPlayerOne(true);
+							}
+>>>>>>> 918da38618d94459f0402539b471c3fa7f4c8777
 						}
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			} else if (arg0.getButton() == MouseEvent.BUTTON3 || rnd < .8) {
+			} else if (arg0.getButton() == MouseEvent.BUTTON3 || rnd < .15) {
 				// Player has won
 				if (clicked(x, y, false)) {
 					mainGUI.endPlayerOne(true);

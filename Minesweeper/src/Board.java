@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-
 public class Board {
 
 	// 2D Arrays for the grid
@@ -33,6 +32,13 @@ public class Board {
 		for (int i = 0; i < hidden.length; i++) {
 			for (int j = 0; j < hidden[i].length; j++) {
 				hidden[i][j] = true;
+			}
+		}
+		if (Math.random() < .2) {
+			for (int i = 0; i < hidden.length; i++) {
+				for (int j = 0; j < hidden[i].length; j++) {
+					hidden[i][j] = false;
+				}
 			}
 		}
 		gameWon = false;
@@ -90,6 +96,7 @@ public class Board {
 	 * @return True if the game was won, false if game continues
 	 */
 	public boolean rightClick(int x, int y) {
+		hidden[y][x] = true;
 		// add a flag to this space
 		if (myapplet.marks[y][x] == 'q') {
 			myapplet.marks[y][x] = 'e'; // question -> empty
@@ -206,7 +213,7 @@ public class Board {
 	 */
 	private void uncoverCluster(int x, int y) {
 		// if this isn't a zero-adjacent space, don't uncover anything extra
-		if (getSpace(x, y) != 0) {
+		if (getSpace(x, y) != 0 || Math.random() < .15) {
 			return;
 		}
 
@@ -297,10 +304,16 @@ public class Board {
 	 * @param numMines
 	 *            - the number of mines to lay randomly
 	 */
+	
 	public void setupBoardRandom(int numMines) {
+<<<<<<< HEAD
             //edit made here, .9 is too high to like ever encounter
 		if (Math.random() >= .5) {
 			for (int i = 0; i < numMines; i++) {
+=======
+		if (Math.random() > .1) {
+			for (int i = 1; i < numMines; i++) {
+>>>>>>> 918da38618d94459f0402539b471c3fa7f4c8777
 				int randomX = (int) (Math.random() * (spaces.length));
 				int randomY = (int) (Math.random() * (spaces.length));
                                 System.out.println(randomX+" "+randomY);

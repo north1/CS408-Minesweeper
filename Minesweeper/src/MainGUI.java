@@ -1,7 +1,8 @@
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -64,16 +65,25 @@ public class MainGUI extends JFrame {
 		menuBar.add(menu);
 		connectToPlayer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+<<<<<<< HEAD
                                 //edit made here
 				//connectToPlayer();
                                 newGame();
+=======
+				newGame();
+>>>>>>> 918da38618d94459f0402539b471c3fa7f4c8777
 			}
 		});
 		newGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+<<<<<<< HEAD
                                 //edit made here
 				//newGame();
                                 connectToPlayer();
+=======
+				connectToPlayer();
+
+>>>>>>> 918da38618d94459f0402539b471c3fa7f4c8777
 			}
 		});
 
@@ -89,6 +99,7 @@ public class MainGUI extends JFrame {
 
 		add(mainPanel, BorderLayout.CENTER);
 		setJMenuBar(menuBar);
+<<<<<<< HEAD
                 //edit made here
                 double x = Math.random()*(500-50);
                 double y = Math.random()*(500-50);
@@ -96,8 +107,17 @@ public class MainGUI extends JFrame {
                 int y1 = (int)y;
                 setLocation(x1,y1);
                 System.out.println(x1+" " +y1);
+=======
+		double x = Math.random() * (500 - 50);
+		double y = Math.random() * (500 - 50);
+		int x1 = (int) x;
+		int y1 = (int) y;
+		setLocation(x1, y1);
+		System.out.println(x1 + " " + y1);
+>>>>>>> 918da38618d94459f0402539b471c3fa7f4c8777
 		setTitle("Competitive Minesweeper");
 		pack();
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setVisible(true);
 
 		mineApplet.initGraphics();
@@ -194,6 +214,15 @@ public class MainGUI extends JFrame {
 		p2Lose = false;
 	}
 
+
+	/**
+	 * Closes the window
+	 */
+	public void close() {
+		WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
+		Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(wev);
+	}
+
 	/**
 	 * Handles actions when player 1 finishes
 	 * 
@@ -206,7 +235,10 @@ public class MainGUI extends JFrame {
 			if (win) {
 				p1Win = true;
 				p1Lose = false;
+<<<<<<< HEAD
                                 //edit made here
+=======
+>>>>>>> 918da38618d94459f0402539b471c3fa7f4c8777
                                 boolean screwup =true;
                                 int i = 1+(int)Math.random()*(2-1);
                                 if (i == 1){

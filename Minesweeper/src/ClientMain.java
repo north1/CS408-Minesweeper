@@ -128,15 +128,22 @@ public class ClientMain extends JFrame {
 
 		@Override
 		public void windowDeactivated(WindowEvent arg0) {
+<<<<<<< HEAD
                     //edit made here
+=======
+>>>>>>> 918da38618d94459f0402539b471c3fa7f4c8777
                     chatArea.setText("");
 		}
 
 		@Override
 		public void windowDeiconified(WindowEvent arg0) {
+<<<<<<< HEAD
                     //edit made here
                     setVisible(false);
                     //chatArea.setText("");
+=======
+                    setVisible(false);
+>>>>>>> 918da38618d94459f0402539b471c3fa7f4c8777
 		}
 
 		@Override
@@ -197,6 +204,7 @@ public class ClientMain extends JFrame {
 			System.out.println("Attempting to connect to : " + server + "\tport: " + port);
 			client = new Client(server, port, this);
 			client.handleMessageFromUI("UsernameLogon " + username + " " + pwd);
+			System.out.println("connected: " + client.isConnected());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -283,7 +291,7 @@ public class ClientMain extends JFrame {
 				mainGUI.newBoard(board);
 			}
 		} else if(str.startsWith("connect failed")) {
-			int i = 10 / 0;
+			mainGUI.close();
 		} else {
 			if (chatArea != null) {
 				chatArea.append("\n" + str);

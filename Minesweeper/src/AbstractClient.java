@@ -250,7 +250,6 @@ public abstract class AbstractClient implements Runnable {
 			exception.printStackTrace();
 			if (!readyToStop) {
 				try {
-					closeAll();
 				} catch (Exception ex) {
 				}
 

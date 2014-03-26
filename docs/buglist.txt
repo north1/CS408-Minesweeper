@@ -7,7 +7,7 @@
 7 register does not start game
 8 chat message limit
 9 amount of users limit
-10 chat window does not scroll
+*10 chat window does not scroll
 11 chat resize hides shit
 12 flag mines after you hit one
 13 board does not scale right
