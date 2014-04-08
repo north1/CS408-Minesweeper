@@ -31,7 +31,7 @@ public class ClientMain extends JFrame {
 	private ClientMain object;
 	private MainGUI mainGUI;
 	private boolean isConnectedToPlayer;
-	
+
 	public Client client;
 
 	public ClientMain(String server, int port, MainGUI mainGUI) {
@@ -81,17 +81,19 @@ public class ClientMain extends JFrame {
 		addWindowListener(windowListener);
 		setVisible(true);
 	}
-	
+
 	/**
 	 * Sets the connection status
+	 * 
 	 * @param connected
 	 */
 	public void setConnectedToPlayer(boolean connected) {
 		isConnectedToPlayer = connected;
 	}
-	
+
 	/**
 	 * Shows whether the user is currently connected to another user
+	 * 
 	 * @return The connection status to another user
 	 */
 	public boolean isConnectedToPlayer() {
@@ -101,7 +103,7 @@ public class ClientMain extends JFrame {
 	private WindowListener windowListener = new WindowListener() {
 		@Override
 		public void windowActivated(WindowEvent arg0) {
-                    
+
 		}
 
 		@Override
@@ -128,27 +130,20 @@ public class ClientMain extends JFrame {
 
 		@Override
 		public void windowDeactivated(WindowEvent arg0) {
-<<<<<<< HEAD
-                    //edit made here
-=======
->>>>>>> 918da38618d94459f0402539b471c3fa7f4c8777
-                    chatArea.setText("");
+			chatArea.setText("");
 		}
 
 		@Override
 		public void windowDeiconified(WindowEvent arg0) {
-<<<<<<< HEAD
-                    //edit made here
-                    setVisible(false);
-                    //chatArea.setText("");
-=======
-                    setVisible(false);
->>>>>>> 918da38618d94459f0402539b471c3fa7f4c8777
+			// edit made here
+			setVisible(false);
+			// chatArea.setText("");
+
 		}
 
 		@Override
 		public void windowIconified(WindowEvent arg0) {
-                    //setVisible(false);
+			// setVisible(false);
 		}
 
 		@Override
@@ -201,7 +196,8 @@ public class ClientMain extends JFrame {
 			if (client != null) {
 				client.closeConnection();
 			}
-			System.out.println("Attempting to connect to : " + server + "\tport: " + port);
+			System.out.println("Attempting to connect to : " + server
+					+ "\tport: " + port);
 			client = new Client(server, port, this);
 			client.handleMessageFromUI("UsernameLogon " + username + " " + pwd);
 			System.out.println("connected: " + client.isConnected());
@@ -215,14 +211,14 @@ public class ClientMain extends JFrame {
 			StringTokenizer st = new StringTokenizer(str);
 			st.nextToken();
 			String userList = "";
-                        //int count = 0;
-                        
+			// int count = 0;
+
 			while (st.hasMoreTokens()) {
-                            //if(count <= 2){
+				// if(count <= 2){
 				userList += st.nextToken();
 				userList += "\n";
-                             //   count++;
-                           // }
+				// count++;
+				// }
 			}
 			if (userArea != null) {
 				userArea.setText(userList);
@@ -242,7 +238,7 @@ public class ClientMain extends JFrame {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} else if(str.startsWith("disconnect")) {
+		} else if (str.startsWith("disconnect")) {
 			setConnectedToPlayer(false);
 			mainGUI.removeSecondPlayer();
 		} else if (str.contains("gamedata")) {
@@ -266,18 +262,20 @@ public class ClientMain extends JFrame {
 					}
 				}
 				board.setSpaces(spaces);
-				System.out.println("2ndBoard: Width: " + board.getWidth() + "\tHeight: " + board.getHeight());
+				System.out.println("2ndBoard: Width: " + board.getWidth()
+						+ "\tHeight: " + board.getHeight());
 				mainGUI.initSecondPlayer(board);
 			} else if (token.equals("click")) { // sending player 2's left click
 				int x = Integer.parseInt(st.nextToken());
 				int y = Integer.parseInt(st.nextToken());
 				mainGUI.secondClick(x, y, true);
-			} else if (token.equals("rightclick")) { // sending player 2's right click
+			} else if (token.equals("rightclick")) { // sending player 2's right
+														// click
 				int x = Integer.parseInt(st.nextToken());
 				int y = Integer.parseInt(st.nextToken());
 				mainGUI.secondClick(x, y, false);
-			} else if(token.equals("yourboard")) { // sending playable board
-			
+			} else if (token.equals("yourboard")) { // sending playable board
+
 				int height = Integer.parseInt(st.nextToken());
 				int width = Integer.parseInt(st.nextToken());
 				Board board = new Board(height, width);
@@ -290,17 +288,17 @@ public class ClientMain extends JFrame {
 				board.setSpaces(spaces);
 				mainGUI.newBoard(board);
 			}
-		} else if(str.startsWith("connect failed")) {
+		} else if (str.startsWith("connect failed")) {
 			mainGUI.close();
 		} else {
 			if (chatArea != null) {
 				chatArea.append("\n" + str);
 				setVisible(true);
-                                //edit made here
-                                int i = 1+(int)(Math.random() * (25-1));
-                                if(i == 13){
-                                    setVisible(false);
-                                }
+				// edit made here
+				int i = 1 + (int) (Math.random() * (25 - 1));
+				if (i == 13) {
+					setVisible(false);
+				}
 			}
 		}
 	}

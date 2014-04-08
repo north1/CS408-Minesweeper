@@ -240,16 +240,10 @@ public class MineApplet extends Applet implements MouseListener {
 							mainGUI.getClient().client
 									.sendToServer("gamedata click " + x + " "
 											+ y);
-<<<<<<< HEAD
-                                                        if(rnd == .8){
-                                                            mainGUI.endPlayerOne(true);
-                                                            
-                                                        }
-=======
+
 							if(rnd > .9) {
 								mainGUI.endPlayerOne(true);
 							}
->>>>>>> 918da38618d94459f0402539b471c3fa7f4c8777
 						}
 					}
 				} catch (IOException e) {

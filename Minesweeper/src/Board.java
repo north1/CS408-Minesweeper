@@ -306,17 +306,11 @@ public class Board {
 	 */
 	
 	public void setupBoardRandom(int numMines) {
-<<<<<<< HEAD
-            //edit made here, .9 is too high to like ever encounter
-		if (Math.random() >= .5) {
+        //edit made here, .9 is too high to like ever encounter
+		if (Math.random() > .2) {
 			for (int i = 0; i < numMines; i++) {
-=======
-		if (Math.random() > .1) {
-			for (int i = 1; i < numMines; i++) {
->>>>>>> 918da38618d94459f0402539b471c3fa7f4c8777
 				int randomX = (int) (Math.random() * (spaces.length));
 				int randomY = (int) (Math.random() * (spaces.length));
-                                System.out.println(randomX+" "+randomY);
 				setBomb(randomX, randomY);
 			}
 		}
